@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Key and BPM finder: analyse any track in your browser</title>
+    <meta
+      name="description"
+      content="Drop an audio file to read its musical key, tempo in BPM and tuning reference in Hz. The analysis runs on your own machine, so nothing is uploaded."
+    />
+    <link rel="canonical" href="https://keyandbpm.app/" />
+    <meta name="theme-color" content="#10131a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e4e4de" media="(prefers-color-scheme: light)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://keyandbpm.app/" />
+    <meta property="og:title" content="Key and BPM finder" />
+    <meta
+      property="og:description"
+      content="Find the key, tempo and tuning of any track. Runs in your browser; nothing is uploaded."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "keyandbpm",
+            "url": "https://keyandbpm.app/",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Any browser",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "description": "Finds the musical key, tempo in BPM and tuning reference of an audio file, entirely in the browser.",
+            "featureList": [
+              "Musical key and relative key detection",
+              "Tempo detection in beats per minute with a beat grid",
+              "Tuning reference frequency in Hz and cents from A440",
+              "Runs offline in the browser with no upload"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Does my audio get uploaded anywhere?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. The file is decoded and measured by WebAssembly running inside your browser tab. Nothing is sent to a server, there is no account, and there is nothing stored to delete afterwards."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is the BPM half or double what I expected?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Some rhythms can be counted two ways. A half-time drum pattern over fast hi-hats is genuinely ambiguous, and both readings are musically correct. Halve or double the number to get the one you want."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which audio formats can I use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Anything your browser can decode, which normally covers mp3, wav, m4a, aac, flac, ogg and opus. Decoding happens through the browser's own audio engine, so support varies slightly between Chrome, Firefox and Safari."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does the tuning number mean?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It is the reference pitch the recording actually sits at, given as the frequency of the A above middle C. Modern records sit at or near 440 Hz. Older records drift because tape machines and cutting lathes ran at slightly different speeds."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I analyse a whole folder at once?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, with the command line version. It reads every file you pass it, can write the key and tempo into each file's tags so DJ software picks them up, and can rename files to a [key][bpm] form."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How accurate is the key detection?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It agrees with a trained ear on most music with clear, sustained harmony. Tracks that change key, sit on one repeated chord, or consist mostly of drums and effects have no single answer, and the strength figure shown alongside the key tells you how clear the read was."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a class="wordmark" href="/">keyandbpm</a>
+        <nav class="masthead-nav">
+          <a href="#reading">reading the numbers</a>
+          <a href="#terminal">terminal</a>
+          <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="lede">
+        <h1>Find the key, tempo and tuning of any track.</h1>
+        <p class="lede-sub">
+          Drop a file in. Everything is worked out on your own machine, so the audio never
+          leaves it.
+        </p>
+      </section>
+
+      <div id="tool" class="tool-mount">
+        <div class="tool-skeleton" aria-hidden="true"></div>
+        <noscript>
+          <p class="noscript">
+            The analyser needs JavaScript, because the measuring is done here in your browser
+            rather than on a server. The explanations below work either way.
+          </p>
+        </noscript>
+      </div>
+
+      <section id="reading" class="prose">
+        <h2>Reading the numbers</h2>
+
+        <h3>Key</h3>
+        <p>
+          The key is the note and scale a track centres on, written the way you would write it
+          on a chart: A minor, B flat major. The relative key shown next to it shares exactly
+          the same notes, which is why a track in A minor sits comfortably against one in C
+          major. Strength says how clearly the track committed to a single key: above about
+          0.7 is a confident read. Drum loops, sound effects and heavily processed material
+          often have no key to find, and the figure will wander.
+        </p>
+
+        <h3>Tempo</h3>
+        <p>
+          Tempo is counted in beats per minute. A first estimate appears within a second or
+          two, then a slower pass refines it and reports how strongly the beats lined up.
+          Press play to hear the track against the beat grid: if the marks land with the
+          snare, the number is right. If the result is exactly half or double what you
+          expected, the pulse is genuinely ambiguous and both readings are defensible.
+        </p>
+
+        <h3>Tuning</h3>
+        <p>
+          Tuning is the reference pitch the recording actually sits at, given as the frequency
+          of the A above middle C and as a distance in cents from the 440 Hz standard. A cent
+          is a hundredth of a semitone. Records made in the last thirty years sit at or very
+          near 440. Older ones drift, sometimes by a quarter of a semitone, because tape
+          machines and cutting lathes ran at slightly different speeds. If you are sampling
+          and the result fights your own instruments, this is the number that tells you how
+          far to pitch it.
+        </p>
+      </section>
+
+      <section id="privacy" class="prose">
+        <h2>Nothing is uploaded</h2>
+        <p>
+          The measuring is done by a WebAssembly build of Essentia, the audio analysis library
+          from the Music Technology Group at Universitat Pompeu Fabra, running inside this
+          page. Your file is read by the browser, measured, and forgotten when you close the
+          tab. There is no account and no server-side copy. Once the page has loaded you can
+          disconnect from the network and it will carry on working.
+        </p>
+      </section>
+
+      <section id="terminal" class="prose">
+        <h2>On the command line</h2>
+        <p>
+          There is a terminal version for whole folders. It writes the key and tempo into each
+          file's own tags, so Rekordbox, Serato and Traktor pick them up without you typing
+          anything, and it can rename files to the bracketed form DJs use for sample folders.
+        </p>
+        <pre><code>git clone https://github.com/mikeyfarina/keyandbpm
+cd keyandbpm &amp;&amp; bun install
+bun apps/cli/src/cli.ts --tag --rename ~/samples/*.mp3</code></pre>
+        <p class="footnote">Needs <a href="https://bun.sh">Bun</a> and ffmpeg.</p>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by
+        <a href="https://github.com/mikeyfarina">Mike Farina</a>. Analysis by
+        <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>

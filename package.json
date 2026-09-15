@@ -1,0 +1,16 @@
+{
+  "name": "keyandbpm-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "bun run --filter '*' typecheck",
+    "build": "bun run --filter @keyandbpm/web build",
+    "dev": "bun run --filter @keyandbpm/web dev",
+    "cli": "bun apps/cli/src/cli.ts"
+  },
+  "license": "AGPL-3.0-or-later"
+}

@@ -1,0 +1,512 @@
+@import "@fontsource-variable/martian-mono/index.css";
+@import "@fontsource-variable/newsreader/index.css";
+
+/*
+  Colour carries information here: the panel takes the hue of the detected key,
+  mapped around the circle of fifths, so keys that mix well sit next to each other
+  on the colour wheel. Everything else stays quiet graphite and bone.
+*/
+:root {
+  --ground: #10131a;
+  --raised: #161a23;
+  --ink: #f4f2ec;
+  --ink-quiet: #959cab;
+  --rule: #272d3b;
+  --key-hue: 220;
+  --key-chroma: 0.02;
+  --signal-lightness: 0.8;
+
+  --mono: "Martian Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+  --serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+
+  --measure: 62ch;
+  --page: 58rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+
+  color-scheme: dark light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ground: #e4e4de;
+    --raised: #ecebe5;
+    --ink: #15181c;
+    --ink-quiet: #5a6069;
+    --rule: #c9c8c0;
+    --signal-lightness: 0.5;
+  }
+}
+
+/*
+  A custom property is substituted where it is declared, so --signal has to be
+  declared again on the panel: that is the element the detected key's hue is set on,
+  and only a redeclaration there picks it up.
+*/
+:root,
+.panel {
+  --signal: oklch(var(--signal-lightness) var(--key-chroma) var(--key-hue));
+  --signal-dim: oklch(var(--signal-lightness) var(--key-chroma) var(--key-hue) / 0.16);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: from-font;
+}
+
+a:hover {
+  text-decoration-color: var(--signal);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead-inner {
+  max-width: var(--page);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1.25rem var(--gutter);
+}
+
+.wordmark {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.masthead-nav {
+  display: flex;
+  gap: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.masthead-nav a {
+  color: var(--ink-quiet);
+  text-decoration: none;
+}
+
+.masthead-nav a:hover {
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------- lede */
+
+main {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.lede {
+  max-width: 46ch;
+  padding-block: clamp(3rem, 9vw, 5.5rem) clamp(1.75rem, 4vw, 2.75rem);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 5.4vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.lede-sub {
+  max-width: 44ch;
+  margin: 1rem 0 0;
+  color: var(--ink-quiet);
+  font-size: 1.05rem;
+}
+
+/* ------------------------------------------------------------------- tool */
+
+.tool-mount {
+  margin-bottom: clamp(3.5rem, 8vw, 6rem);
+}
+
+.tool-skeleton,
+.panel {
+  min-height: 15.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  background: var(--raised);
+}
+
+.panel {
+  min-height: 0;
+  overflow: clip;
+  transition: border-color 400ms ease;
+}
+
+.panel[data-state="done"] {
+  border-color: var(--signal-dim);
+}
+
+.noscript {
+  margin-top: 1rem;
+  color: var(--ink-quiet);
+}
+
+/* drop zone */
+
+.drop {
+  display: grid;
+  place-items: center;
+  gap: 0.6rem;
+  padding: clamp(2.75rem, 9vw, 4.5rem) 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.drop:hover,
+.drop[data-dragging="true"] {
+  background: var(--signal-dim);
+}
+
+.drop-headline {
+  font-family: var(--mono);
+  font-size: clamp(0.85rem, 2.4vw, 1rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.drop-hint {
+  color: var(--ink-quiet);
+  font-size: 0.95rem;
+}
+
+.drop-formats {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ink-quiet);
+  letter-spacing: -0.01em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* file line */
+
+.filebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: -0.02em;
+}
+
+.filebar-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60ch;
+}
+
+.filebar button {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--ink-quiet);
+  font: inherit;
+  cursor: pointer;
+}
+
+.filebar button:hover {
+  color: var(--ink);
+}
+
+/* readouts */
+
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.readout {
+  padding: clamp(1.25rem, 3.5vw, 1.9rem) clamp(1rem, 3vw, 1.5rem);
+  border-left: 1px solid var(--rule);
+}
+
+.readout:first-child {
+  border-left: 0;
+}
+
+.readout-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--ink-quiet);
+  letter-spacing: -0.01em;
+}
+
+.readout-value {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: clamp(1.45rem, 4.6vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.06em;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.readout-value[data-pending="true"] {
+  color: var(--ink-quiet);
+  opacity: 0.45;
+}
+
+.readout-note {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--ink-quiet);
+  line-height: 1.4;
+}
+
+/* the pulse ticks once per detected beat, so you can check the tempo by eye */
+
+.pulse {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--signal);
+  opacity: 0.25;
+}
+
+.pulse[data-lit="true"] {
+  opacity: 1;
+  transition: opacity 90ms ease-out;
+}
+
+.pulse[data-lit="false"] {
+  transition: opacity 420ms ease-out;
+}
+
+/* waveform */
+
+.wave {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.wave-play {
+  flex: 0 0 auto;
+  width: 3.4rem;
+  border: 0;
+  border-right: 1px solid var(--rule);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.wave-play:hover {
+  background: var(--signal-dim);
+}
+
+.wave-canvas {
+  display: block;
+  width: 100%;
+  height: 6rem;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.wave-canvas-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* progress + errors */
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  color: var(--ink-quiet);
+  letter-spacing: -0.02em;
+}
+
+.status-bar {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--signal);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left;
+  transition: transform 300ms ease;
+}
+
+.error {
+  padding: 1.25rem;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------------ prose */
+
+.prose {
+  max-width: var(--measure);
+  padding-block: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--rule);
+}
+
+.prose h2 {
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.prose h3 {
+  margin: 2rem 0 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--ink-quiet);
+  letter-spacing: -0.01em;
+}
+
+.prose p {
+  margin: 0 0 1rem;
+}
+
+.prose pre {
+  margin: 1.25rem 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--raised);
+}
+
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 2;
+  letter-spacing: -0.02em;
+}
+
+.footnote {
+  color: var(--ink-quiet);
+  font-size: 0.95rem;
+}
+
+.colophon {
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  padding-block: 2rem 3.5rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-quiet);
+  font-size: 0.95rem;
+}
+
+.colophon p {
+  margin: 0;
+}
+
+/* ----------------------------------------------------------------- narrow */
+
+@media (max-width: 46rem) {
+  .readouts {
+    grid-template-columns: 1fr;
+  }
+
+  .readout {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .readout:first-child {
+    border-top: 0;
+  }
+
+  .wave-canvas {
+    height: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "keyandbpm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "keyandbpm": "./src/cli.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@keyandbpm/core": "workspace:*",
+    "essentia.js": "0.1.3"
+  },
+  "devDependencies": {
+    "bun-types": "^1.4.2",
+    "typescript": "^7.0.2"
+  }
+}
