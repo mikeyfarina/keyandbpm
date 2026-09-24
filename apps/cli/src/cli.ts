@@ -2,7 +2,9 @@
 import { parseArgs } from "node:util";
 import { basename } from "node:path";
 import { stat } from "node:fs/promises";
-import { Analyzer, confidenceLabel, formatBpm, formatTuning, type Analysis, type TempoResult } from "@keyandbpm/core";
+import {
+  Analyzer, confidenceLabel, formatBpm, formatDuration, formatTuning, isConcertPitch, type Analysis,
+} from "@keyandbpm/core";
 import { loadEssentiaWasm } from "@keyandbpm/core/node";
 import { decodeToMono } from "./decode.ts";
 import { renameWithPrefix } from "./rename.ts";
@@ -29,14 +31,8 @@ interface Options {
   rename: boolean;
 }
 
-function formatDuration(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = Math.round(seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
-}
-
 function printReadable(file: string, a: Analysis, extras: string[]): void {
-  const cents = a.tuning.cents === 0 ? "at concert pitch" : `${a.tuning.cents > 0 ? "+" : ""}${a.tuning.cents} cents from A440`;
+  const cents = isConcertPitch(a.tuning) ? "at concert pitch" : `${a.tuning.cents > 0 ? "+" : ""}${a.tuning.cents} cents from A440`;
   const lines = [
     basename(file),
     `  key      ${a.key.name}  (relative ${a.key.relative.name}, strength ${a.key.strength.toFixed(2)})`,
@@ -58,11 +54,17 @@ async function processFile(analyzer: Analyzer, file: string, opts: Options): Pro
 
   try {
     const pcm = decodeToMono(file);
+    // Only ask for progress when someone will read it; without a listener the fast tempo pass is skipped.
+    const showProgress = !opts.json && !opts.fast;
     const analysis = analyzer.analyze(pcm, {
       tempoMethod: opts.fast ? "fast" : "accurate",
-      onFastTempo: (t: TempoResult) => {
-        if (!opts.json) console.error(`${basename(file)}: ${formatBpm(t.bpm)} bpm at first pass, refining...`);
-      },
+      onProgress: showProgress
+        ? (update) => {
+            if (update.type === "tempo" && update.tempo.method === "fast") {
+              console.error(`${basename(file)}: ${formatBpm(update.tempo.bpm)} bpm at first pass, refining...`);
+            }
+          }
+        : undefined,
     });
 
     const extras: string[] = [];

@@ -15,8 +15,17 @@ export function Waveform({ buffer, beats, player }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(player.playing);
+  // Beats arrive twice (fast, then accurate) after the waveform is up. Reading them through a
+  // ref means a new beat list only repaints, instead of re-scanning the whole track for peaks.
+  const beatsRef = useRef(beats);
+  const redrawRef = useRef<(() => void) | null>(null);
 
   useEffect(() => player.onChange(setPlaying), [player]);
+
+  useEffect(() => {
+    beatsRef.current = beats;
+    redrawRef.current?.();
+  }, [beats]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,6 +40,7 @@ export function Waveform({ buffer, beats, player }: Props) {
     let colors = readColors(canvas);
 
     const draw = () => {
+      const marks = beatsRef.current;
       ctx.clearRect(0, 0, width, height);
       const middle = height / 2;
       const playedTo = (player.position / buffer.duration) * width;
@@ -44,12 +54,12 @@ export function Waveform({ buffer, beats, player }: Props) {
 
       // Every beat of a long track would smear into a dotted line, so mark bars
       // instead once the beats crowd together, and nothing at all when even those would.
-      const spacing = beats.length > 1 ? width / beats.length : width;
+      const spacing = marks.length > 1 ? width / marks.length : width;
       const every = spacing >= 7 ? 1 : spacing * 4 >= 7 ? 4 : 0;
       if (every > 0) {
         ctx.fillStyle = colors.mark;
-        for (let i = 0; i < beats.length; i += every) {
-          ctx.fillRect(Math.floor((beats[i]! / buffer.duration) * width), height - 6, 1, 6);
+        for (let i = 0; i < marks.length; i += every) {
+          ctx.fillRect(Math.floor((marks[i]! / buffer.duration) * width), height - 6, 1, 6);
         }
       }
 
@@ -98,13 +108,15 @@ export function Waveform({ buffer, beats, player }: Props) {
     };
     const unfollow = player.onChange(follow);
     follow(player.playing);
+    redrawRef.current = draw;
 
     return () => {
+      redrawRef.current = null;
       observer.disconnect();
       unfollow();
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [buffer, beats, player]);
+  }, [buffer, player]);
 
   const seekTo = (clientX: number) => {
     const wrap = wrapRef.current;

@@ -34,10 +34,16 @@ export interface Analysis {
   duration: number;
 }
 
+/** One measurement, reported as it lands. For the accurate method, tempo arrives twice: fast, then accurate. */
+export type AnalysisUpdate =
+  | { type: "tempo"; tempo: TempoResult }
+  | { type: "tuning"; tuning: TuningResult }
+  | { type: "key"; key: KeyResult };
+
 export interface AnalyzeOptions {
   tempoMethod?: TempoMethod;
-  /** Called with the fast tempo before the accurate pass runs. Only fires for tempoMethod "accurate". */
-  onFastTempo?: (tempo: TempoResult) => void;
+  /** Called with each result as it lands, quickest first, so a front end can show numbers early. */
+  onProgress?: (update: AnalysisUpdate) => void;
 }
 
 export class Analyzer {
@@ -51,11 +57,12 @@ export class Analyzer {
     return this.essentia.version;
   }
 
-  key(pcm: Float32Array): KeyResult {
+  /** `tuningHz` is the track's A4 reference, so a detuned record is heard against its own grid. */
+  key(pcm: Float32Array, tuningHz = 440): KeyResult {
     const signal = this.essentia.arrayToVector(pcm);
     try {
       const result = this.essentia.KeyExtractor(
-        signal, true, 4096, 4096, 12, 3500, 60, 25, 0.2, "bgate", SAMPLE_RATE, 0.0001, 440, "cosine", "hann",
+        signal, true, 4096, 4096, 12, 3500, 60, 25, 0.2, "bgate", SAMPLE_RATE, 0.0001, tuningHz, "cosine", "hann",
       );
       const scale: Scale = result.scale === "minor" ? "minor" : "major";
       const pc = pitchClassOf(result.key);
@@ -92,13 +99,22 @@ export class Analyzer {
 
   analyze(pcm: Float32Array, options: AnalyzeOptions = {}): Analysis {
     const method = options.tempoMethod ?? "accurate";
-    const key = this.key(pcm);
+    const report = options.onProgress;
+
+    // The fast tempo is only worth its cost when it is the answer or someone will see it early.
+    let tempo = method === "fast" || report ? this.tempo(pcm, "fast") : null;
+    if (tempo) report?.({ type: "tempo", tempo });
+
+    // Tuning goes first so the key is heard against the record's own pitch grid.
     const tuning = this.tuning(pcm);
-    let tempo = this.tempo(pcm, "fast");
+    report?.({ type: "tuning", tuning });
+    const key = this.key(pcm, tuning.hz);
+    report?.({ type: "key", key });
+
     if (method === "accurate") {
-      options.onFastTempo?.(tempo);
       tempo = this.tempo(pcm, "accurate");
+      report?.({ type: "tempo", tempo });
     }
-    return { key, tempo, tuning, duration: pcm.length / SAMPLE_RATE };
+    return { key, tempo: tempo!, tuning, duration: pcm.length / SAMPLE_RATE };
   }
 }

@@ -1,4 +1,4 @@
-import { rename } from "node:fs/promises";
+import { rename, unlink } from "node:fs/promises";
 import { basename, dirname, extname, join } from "node:path";
 import type { Analysis } from "@keyandbpm/core";
 import { ffmpegPath } from "./decode.ts";
@@ -10,12 +10,14 @@ interface TagNames {
 }
 
 /** Tag names differ by container. ID3 uses TBPM/TKEY frames; Vorbis comments use BPM/INITIALKEY. */
-function tagNamesFor(ext: string): TagNames | null {
+export function tagNamesFor(ext: string): TagNames | null {
   switch (ext.toLowerCase()) {
     case ".mp3":
+      return { bpm: "TBPM", key: "TKEY", extraArgs: ["-id3v2_version", "3"] };
     case ".aif":
     case ".aiff":
-      return { bpm: "TBPM", key: "TKEY", extraArgs: ["-id3v2_version", "3"] };
+      // The AIFF muxer only writes an ID3 chunk when asked; without this the tags are dropped.
+      return { bpm: "TBPM", key: "TKEY", extraArgs: ["-write_id3v2", "1", "-id3v2_version", "3"] };
     case ".flac":
     case ".ogg":
     case ".oga":
@@ -50,6 +52,10 @@ export async function writeTags(file: string, analysis: Analysis): Promise<TagOu
     { stdout: "pipe", stderr: "pipe" },
   );
   if (proc.exitCode !== 0) {
+    // ffmpeg may have got as far as creating the temp file; don't leave it in the user's folder.
+    await unlink(tmp).catch((err: NodeJS.ErrnoException) => {
+      if (err.code !== "ENOENT") throw err;
+    });
     throw new Error(`Could not write tags to ${file}: ${proc.stderr.toString().trim()}`);
   }
   await rename(tmp, file);

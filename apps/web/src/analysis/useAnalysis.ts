@@ -13,7 +13,6 @@ export interface AnalysisState {
   key: KeyResult | null;
   tuning: TuningResult | null;
   tempo: TempoResult | null;
-  tempoStage: "fast" | "accurate" | null;
   error: string | null;
 }
 
@@ -25,7 +24,6 @@ const EMPTY: AnalysisState = {
   key: null,
   tuning: null,
   tempo: null,
-  tempoStage: null,
   error: null,
 };
 
@@ -33,13 +31,16 @@ const EMPTY: AnalysisState = {
 export function progressOf(state: AnalysisState): number {
   if (state.stage === "idle") return 0;
   if (state.stage === "done") return 1;
-  const landed = [state.tempo, state.key, state.tuning, state.tempoStage === "accurate"].filter(Boolean).length;
+  const landed = [state.tempo, state.tuning, state.key, state.tempo?.method === "accurate"].filter(Boolean).length;
   return (landed + 0.35) / 5;
 }
 
 export function useAnalysis() {
   const [state, setState] = useState<AnalysisState>(EMPTY);
   const workerRef = useRef<Worker | null>(null);
+  const busyRef = useRef(false);
+  // Bumped per chosen file, so a slow decode of an earlier file cannot write over a later one.
+  const requestRef = useRef(0);
 
   const spawn = useCallback((): Worker => {
     const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
@@ -53,12 +54,14 @@ export function useAnalysis() {
           setState((s) => ({ ...s, tuning: message.tuning }));
           break;
         case "tempo":
-          setState((s) => ({ ...s, tempo: message.tempo, tempoStage: message.stage }));
+          setState((s) => ({ ...s, tempo: message.tempo }));
           break;
         case "done":
+          busyRef.current = false;
           setState((s) => ({ ...s, stage: "done" }));
           break;
         case "failed":
+          busyRef.current = false;
           setState((s) => ({ ...s, stage: "idle", error: message.message }));
           break;
         case "ready":
@@ -66,6 +69,7 @@ export function useAnalysis() {
       }
     };
     worker.onerror = (event) => {
+      busyRef.current = false;
       setState((s) => ({ ...s, stage: "idle", error: event.message || "The analyser failed to start." }));
     };
     return worker;
@@ -84,22 +88,25 @@ export function useAnalysis() {
 
   const analyse = useCallback(
     async (file: File) => {
+      const request = ++requestRef.current;
       // The analysis runs as one long synchronous call, so the only way to drop it
-      // for a newly chosen file is to replace the worker outright.
-      workerRef.current?.terminate();
-      const worker = spawn();
-      workerRef.current = worker;
+      // for a newly chosen file is to replace the worker. An idle one keeps its warm WASM.
+      if (busyRef.current) {
+        workerRef.current?.terminate();
+        workerRef.current = spawn();
+        busyRef.current = false;
+      }
 
       setState({ ...EMPTY, stage: "decoding", fileName: file.name });
       try {
         const decoded = await decodeFile(file);
-        setState((s) =>
-          s.fileName === file.name
-            ? { ...s, stage: "analysing", buffer: decoded.buffer, context: decoded.context }
-            : s,
-        );
+        const worker = workerRef.current;
+        if (request !== requestRef.current || !worker) return;
+        setState((s) => ({ ...s, stage: "analysing", buffer: decoded.buffer, context: decoded.context }));
+        busyRef.current = true;
         worker.postMessage({ type: "analyze", pcm: decoded.mono }, [decoded.mono.buffer]);
       } catch (error) {
+        if (request !== requestRef.current) return;
         setState({
           ...EMPTY,
           error: error instanceof Error ? error.message : String(error),
@@ -109,7 +116,5 @@ export function useAnalysis() {
     [spawn],
   );
 
-  const reset = useCallback(() => setState(EMPTY), []);
-
-  return { state, analyse, reset };
+  return { state, analyse };
 }

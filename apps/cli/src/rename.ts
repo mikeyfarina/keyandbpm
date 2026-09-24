@@ -1,4 +1,4 @@
-import { rename } from "node:fs/promises";
+import { access, rename } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { filePrefix, type Analysis } from "@keyandbpm/core";
 
@@ -12,6 +12,10 @@ export function renamedPath(file: string, analysis: Analysis): string {
 
 export async function renameWithPrefix(file: string, analysis: Analysis): Promise<string> {
   const target = renamedPath(file, analysis);
-  if (target !== file) await rename(file, target);
+  if (target === file) return target;
+  // rename() silently replaces an existing file, which here would be a different recording.
+  const taken = await access(target).then(() => true, () => false);
+  if (taken) throw new Error(`Not renaming ${file}: ${basename(target)} already exists`);
+  await rename(file, target);
   return target;
 }

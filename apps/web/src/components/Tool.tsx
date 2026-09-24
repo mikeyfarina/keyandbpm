@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { pitchClassOf } from "@keyandbpm/core";
+import { formatDuration, pitchClassOf } from "@keyandbpm/core";
 import { progressOf, useAnalysis, type AnalysisState } from "../analysis/useAnalysis.ts";
 import { Player } from "../audio/player.ts";
 import { keyHue } from "../keyColor.ts";
-import { duration } from "../display.ts";
 import { Readouts } from "./Readouts.tsx";
 import { Waveform } from "./Waveform.tsx";
 
 const FORMATS = "mp3, wav, m4a, flac, ogg, opus";
 
 export function Tool() {
-  const { state, analyse, reset } = useAnalysis();
+  const { state, analyse } = useAnalysis();
   const [dragging, setDragging] = useState(false);
   const [player, setPlayer] = useState<Player | null>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -28,7 +27,7 @@ export function Tool() {
   const style = useMemo(() => {
     if (!state.key) return undefined;
     return {
-      "--key-hue": String(keyHue(state.key, pitchClassOf(state.key.tonic))),
+      "--key-hue": String(keyHue(pitchClassOf(state.key.tonic), state.key.scale)),
       "--key-chroma": "0.145",
     } as React.CSSProperties;
   }, [state.key]);
@@ -95,7 +94,7 @@ export function Tool() {
           <div className="filebar">
             <span className="filebar-name" title={state.fileName ?? ""}>
               {state.fileName}
-              {state.buffer ? `, ${duration(state.buffer.duration)}` : ""}
+              {state.buffer ? `, ${formatDuration(state.buffer.duration)}` : ""}
             </span>
             <button type="button" onClick={() => input.current?.click()}>
               analyse another
@@ -128,7 +127,7 @@ export function Tool() {
 function stepLabel(state: AnalysisState): string {
   if (state.stage === "decoding") return "reading the file";
   if (!state.tempo) return "finding the beat";
-  if (!state.key) return "finding the key";
   if (!state.tuning) return "checking the tuning";
+  if (!state.key) return "finding the key";
   return "refining the tempo";
 }

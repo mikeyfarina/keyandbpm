@@ -7,6 +7,7 @@ export class Player {
   private source: AudioBufferSourceNode | null = null;
   private startedAt = 0;
   private offset = 0;
+  private resuming: Promise<void> | null = null;
   private listeners = new Set<(playing: boolean) => void>();
 
   constructor(
@@ -33,8 +34,16 @@ export class Player {
   }
 
   async play(): Promise<void> {
-    if (this.source) return;
-    if (this.context.state === "suspended") await this.context.resume();
+    // A second click while the context wakes would otherwise start a second source nothing can stop.
+    if (this.source || this.resuming) return;
+    if (this.context.state === "suspended") {
+      this.resuming = this.context.resume();
+      try {
+        await this.resuming;
+      } finally {
+        this.resuming = null;
+      }
+    }
     const source = this.context.createBufferSource();
     source.buffer = this.buffer;
     source.connect(this.context.destination);

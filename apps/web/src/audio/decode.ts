@@ -1,4 +1,7 @@
-import { SAMPLE_RATE } from "@keyandbpm/core";
+import { SAMPLE_RATE, formatDuration } from "@keyandbpm/core";
+
+/** Past this the decoded audio and the copy sent for analysis run past a gigabyte and can crash the tab. */
+const MAX_MINUTES = 30;
 
 export interface DecodedAudio {
   buffer: AudioBuffer;
@@ -24,6 +27,11 @@ export async function decodeFile(file: File): Promise<DecodedAudio> {
   } catch {
     throw new Error(
       `${file.name} could not be decoded. Browsers each read a slightly different set of formats; an mp3 or wav will work everywhere.`,
+    );
+  }
+  if (buffer.duration > MAX_MINUTES * 60) {
+    throw new Error(
+      `${file.name} is ${formatDuration(buffer.duration)} long. The browser version stops at ${MAX_MINUTES} minutes to stay within memory; the terminal version takes any length.`,
     );
   }
   return { buffer, mono: toMono(buffer), context: ctx };
