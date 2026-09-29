@@ -2,7 +2,7 @@
 
 Finds the musical key, tempo and tuning reference of an audio file.
 
-Live at <https://keyandbpm.keyandbpm-web.workers.dev>.
+Live at <https://whatkeyandbpm.com>.
 
 There are two ways to use it. The website analyses one track at a time and runs entirely
 in the browser, so the audio is never uploaded. The terminal version takes any number of
