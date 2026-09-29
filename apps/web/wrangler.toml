@@ -6,18 +6,16 @@ compatibility_date = "2026-09-01"
 directory = "./dist"
 not_found_handling = "404-page"
 
-# Keep the workers.dev address serving. It is the canonical URL in index.html and the
-# only hostname answering until the custom domain is attached.
+# The workers.dev address stays enabled alongside the real domain, so a failed
+# trigger update can never leave the worker with no hostname at all.
 workers_dev = true
 
-# whatkeyandbpm.com cannot be attached while the zone still holds the DNS records that
-# were imported from the previous registrar: Workers refuses to overwrite records it did
-# not create. Delete the apex and www records in the Cloudflare dashboard, then restore:
-#
-# [[routes]]
-# pattern = "whatkeyandbpm.com"
-# custom_domain = true
-#
-# [[routes]]
-# pattern = "www.whatkeyandbpm.com"
-# custom_domain = true
+# Both hostnames serve the same assets. The canonical tag in index.html names one of
+# them, so search engines treat them as a single page rather than duplicates.
+[[routes]]
+pattern = "whatkeyandbpm.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.whatkeyandbpm.com"
+custom_domain = true
