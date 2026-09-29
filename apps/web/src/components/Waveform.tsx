@@ -1,195 +1,238 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { formatDuration } from "@keyandbpm/core";
 import { peaksFor } from "../audio/peaks.ts";
 import type { Player } from "../audio/player.ts";
+import { track } from "../analytics.ts";
+import { fitCanvas, onFrame } from "../ticker.ts";
 
-const BAR_PITCH = 3;
+/** Peak slices per second of audio; enough for the zoomed view to show individual hits. */
+const RESOLUTION = 100;
+const ZOOM_BEATS = 16;
+const PHOSPHOR = "142, 245, 225";
 
 interface Props {
-  buffer: AudioBuffer;
+  buffer: AudioBuffer | null;
   beats: number[];
-  player: Player;
+  bpm: number | null;
+  player: Player | null;
+  decoding: boolean;
 }
 
-/** The waveform doubles as proof: if the beat marks land with the snare, the tempo is right. */
-export function Waveform({ buffer, beats, player }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const [playing, setPlaying] = useState(player.playing);
-  // Beats arrive twice (fast, then accurate) after the waveform is up. Reading them through a
-  // ref means a new beat list only repaints, instead of re-scanning the whole track for peaks.
-  const beatsRef = useRef(beats);
-  const redrawRef = useRef<(() => void) | null>(null);
+export function togglePlayback(player: Player): void {
+  if (!player.playing) track("playback_started", { position_s: Math.round(player.position) });
+  player.toggle();
+}
 
-  useEffect(() => player.onChange(setPlaying), [player]);
+/**
+ * Needle search, as on a CDJ. The zoomed view scrolls under a fixed playhead with the
+ * beat grid drawn beneath it: if the marks land with the snare, the tempo is right. Drag
+ * it to nudge. The strip below is the whole track; click or drag it to jump.
+ */
+export function Waveform({ buffer, beats, bpm, player, decoding }: Props) {
+  const zoomRef = useRef<HTMLCanvasElement>(null);
+  const overRef = useRef<HTMLCanvasElement>(null);
+  const elapsedRef = useRef<HTMLSpanElement>(null);
+  const remainingRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    beatsRef.current = beats;
-    redrawRef.current?.();
-  }, [beats]);
+  const peaks = useMemo(() => {
+    if (!buffer) return null;
+    const raw = peaksFor(buffer.getChannelData(0), Math.max(1, Math.ceil(buffer.duration * RESOLUTION)));
+    let loudest = 0;
+    for (const v of raw) if (v > loudest) loudest = v;
+    if (loudest > 0) for (let i = 0; i < raw.length; i++) raw[i]! /= loudest;
+    return raw;
+  }, [buffer]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const wrap = wrapRef.current;
-    if (!canvas || !wrap) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  // Beats arrive twice (fast, then accurate); the frame loop reads the latest through a ref.
+  const live = useRef({ peaks, beats, bpm, player, decoding, buffer });
+  live.current = { peaks, beats, bpm, player, decoding, buffer };
 
-    let peaks = new Float32Array();
-    let width = 0;
-    let height = 0;
-    let colors = readColors(canvas);
+  useEffect(
+    () =>
+      onFrame((_, now) => {
+        const { peaks, beats, bpm, player, decoding, buffer } = live.current;
+        const position = player?.position ?? 0;
+        const duration = buffer?.duration ?? 0;
+        if (elapsedRef.current) elapsedRef.current.textContent = clock(position);
+        if (remainingRef.current) remainingRef.current.textContent = `-${clock(duration - position)}`;
+        drawZoom(zoomRef.current, peaks, beats, bpm, position);
+        drawOverview(overRef.current, peaks, position, duration, decoding, now);
+        overRef.current?.setAttribute("aria-valuenow", String(Math.round(position)));
+      }),
+    [],
+  );
 
-    const draw = () => {
-      const marks = beatsRef.current;
-      ctx.clearRect(0, 0, width, height);
-      const middle = height / 2;
-      const playedTo = (player.position / buffer.duration) * width;
+  const windowSeconds = bpm ? (ZOOM_BEATS * 60) / bpm : 8;
+  const jog = useRef<{ x: number; from: number; resume: boolean } | null>(null);
 
-      for (let b = 0; b < peaks.length; b++) {
-        const x = b * BAR_PITCH;
-        const amplitude = Math.max(1, peaks[b]! * (height / 2) * 0.92);
-        ctx.fillStyle = x <= playedTo ? colors.signal : colors.quiet;
-        ctx.fillRect(x, middle - amplitude, BAR_PITCH - 1, amplitude * 2);
-      }
-
-      // Every beat of a long track would smear into a dotted line, so mark bars
-      // instead once the beats crowd together, and nothing at all when even those would.
-      const spacing = marks.length > 1 ? width / marks.length : width;
-      const every = spacing >= 7 ? 1 : spacing * 4 >= 7 ? 4 : 0;
-      if (every > 0) {
-        ctx.fillStyle = colors.mark;
-        for (let i = 0; i < marks.length; i += every) {
-          ctx.fillRect(Math.floor((marks[i]! / buffer.duration) * width), height - 6, 1, 6);
-        }
-      }
-
-      if (player.position > 0) {
-        ctx.fillStyle = colors.signal;
-        ctx.fillRect(Math.floor(playedTo), 0, 1, height);
-      }
-
-      const announced = String(Math.round(player.position));
-      if (wrap.getAttribute("aria-valuenow") !== announced) {
-        wrap.setAttribute("aria-valuenow", announced);
-      }
-    };
-
-    const resize = () => {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      width = Math.max(1, Math.floor(wrap.clientWidth));
-      height = Math.max(1, Math.floor(canvas.clientHeight));
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      colors = readColors(canvas);
-      peaks = peaksFor(buffer.getChannelData(0), Math.max(1, Math.floor(width / BAR_PITCH)));
-      draw();
-    };
-
-    const observer = new ResizeObserver(resize);
-    observer.observe(wrap);
-    resize();
-
-    // Drawing follows the player directly rather than React state, so a seek while
-    // paused repaints the playhead straight away instead of waiting for a render.
-    let frame = 0;
-    const loop = () => {
-      draw();
-      frame = requestAnimationFrame(loop);
-    };
-    const follow = (isPlaying: boolean) => {
-      if (isPlaying) {
-        if (!frame) frame = requestAnimationFrame(loop);
-      } else {
-        if (frame) cancelAnimationFrame(frame);
-        frame = 0;
-        draw();
-      }
-    };
-    const unfollow = player.onChange(follow);
-    follow(player.playing);
-    redrawRef.current = draw;
-
-    return () => {
-      redrawRef.current = null;
-      observer.disconnect();
-      unfollow();
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, [buffer, player]);
-
-  const seekTo = (clientX: number) => {
-    const wrap = wrapRef.current;
-    if (!wrap) return;
-    const rect = wrap.getBoundingClientRect();
-    player.seek(((clientX - rect.left) / rect.width) * buffer.duration);
+  const seekOverview = (clientX: number) => {
+    const canvas = overRef.current;
+    if (!canvas || !player) return;
+    const rect = canvas.getBoundingClientRect();
+    player.seek(((clientX - rect.left) / rect.width) * player.duration);
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
+    if (!player) return;
     const step = event.shiftKey ? 10 : 2;
-    if (event.key === "ArrowRight") player.seek(player.position + step);
-    else if (event.key === "ArrowLeft") player.seek(player.position - step);
-    else if (event.key === "Home") player.seek(0);
-    else if (event.key === " " || event.key === "Enter") player.toggle();
-    else return;
+    if (event.key === " " || event.key === "Enter") {
+      togglePlayback(player);
+    } else {
+      if (event.key === "ArrowRight") player.seek(player.position + step);
+      else if (event.key === "ArrowLeft") player.seek(player.position - step);
+      else if (event.key === "Home") player.seek(0);
+      else return;
+      // A held arrow key repeats; count the gesture once.
+      if (!event.repeat) track("seeked", { via: "keyboard" });
+    }
     event.preventDefault();
   };
 
   return (
-    <div className="wave">
-      <button
-        type="button"
-        className="wave-play"
-        onClick={() => player.toggle()}
-        aria-label={playing ? "Pause" : "Play"}
-      >
-        {playing ? <PauseIcon /> : <PlayIcon />}
-      </button>
-      <div
-        ref={wrapRef}
-        className="wave-canvas-wrap"
-        role="slider"
-        tabIndex={0}
-        aria-label="Playback position"
-        aria-valuemin={0}
-        aria-valuemax={Math.round(buffer.duration)}
-        aria-valuenow={Math.round(player.position)}
-        onKeyDown={onKeyDown}
+    <div className="vfd strip">
+      <canvas
+        ref={zoomRef}
+        className="strip-zoom"
+        aria-hidden="true"
         onPointerDown={(event) => {
+          if (!player) return;
           event.currentTarget.setPointerCapture(event.pointerId);
-          seekTo(event.clientX);
+          jog.current = { x: event.clientX, from: player.position, resume: player.playing };
+          if (player.playing) player.pause();
+          track("seeked", { via: "pointer" });
         }}
         onPointerMove={(event) => {
-          if (event.buttons === 1) seekTo(event.clientX);
+          const drag = jog.current;
+          if (!drag || !player) return;
+          const width = event.currentTarget.getBoundingClientRect().width;
+          player.seek(drag.from - ((event.clientX - drag.x) / width) * windowSeconds);
         }}
-      >
-        <canvas ref={canvasRef} className="wave-canvas" />
+        onPointerUp={() => {
+          if (jog.current?.resume && player) void player.play();
+          jog.current = null;
+        }}
+      />
+      <div className="strip-times">
+        <span ref={elapsedRef} className={buffer ? "lit" : "ghost"}>
+          0:00
+        </span>
+        <span className="ghost">{bpm ? `${ZOOM_BEATS} BEATS` : "8 SEC"}</span>
+        <span ref={remainingRef} className={buffer ? "lit" : "ghost"}>
+          -0:00
+        </span>
       </div>
+      <canvas
+        ref={overRef}
+        className="strip-overview"
+        role="slider"
+        tabIndex={buffer ? 0 : -1}
+        aria-label="Playback position"
+        aria-valuemin={0}
+        aria-valuemax={Math.round(buffer?.duration ?? 0)}
+        aria-valuenow={0}
+        onKeyDown={onKeyDown}
+        onPointerDown={(event) => {
+          if (!player) return;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          seekOverview(event.clientX);
+          track("seeked", { via: "pointer" });
+        }}
+        onPointerMove={(event) => {
+          if (event.buttons === 1) seekOverview(event.clientX);
+        }}
+      />
     </div>
   );
 }
 
-function readColors(element: HTMLElement): { signal: string; quiet: string; mark: string } {
-  const styles = getComputedStyle(element);
-  return {
-    signal: styles.getPropertyValue("--signal").trim(),
-    quiet: styles.getPropertyValue("--ink-quiet").trim(),
-    mark: styles.getPropertyValue("--rule").trim(),
-  };
+function clock(seconds: number): string {
+  return formatDuration(Math.max(0, Math.floor(seconds)));
 }
 
-function PlayIcon() {
-  return (
-    <svg width="13" height="15" viewBox="0 0 13 15" aria-hidden="true">
-      <path d="M1 1.2 12 7.5 1 13.8Z" fill="currentColor" />
-    </svg>
-  );
+function drawZoom(
+  canvas: HTMLCanvasElement | null,
+  peaks: Float32Array | null,
+  beats: number[],
+  bpm: number | null,
+  position: number,
+): void {
+  if (!canvas) return;
+  const { w, h, k } = fitCanvas(canvas);
+  const g = canvas.getContext("2d");
+  if (!g) return;
+  g.clearRect(0, 0, w, h);
+  if (!peaks) return;
+
+  const span = bpm ? (ZOOM_BEATS * 60) / bpm : 8;
+  const start = position - span / 2;
+  const bar = 2 * k;
+  const gap = k;
+  const count = Math.floor(w / (bar + gap));
+  const middle = h / 2 - 4 * k;
+  const reach = h / 2 - 10 * k;
+  for (let i = 0; i < count; i++) {
+    const from = start + (i / count) * span;
+    const to = start + ((i + 1) / count) * span;
+    if (to < 0) continue;
+    let peak = 0;
+    for (let s = Math.max(0, Math.floor(from * RESOLUTION)); s <= Math.floor(to * RESOLUTION) && s < peaks.length; s++) {
+      if (peaks[s]! > peak) peak = peaks[s]!;
+    }
+    const height = Math.max(k, peak * reach);
+    g.fillStyle = `rgba(${PHOSPHOR}, ${from < position ? 0.95 : 0.38})`;
+    g.fillRect(i * (bar + gap), middle - height, bar, height * 2);
+  }
+
+  g.font = `800 ${9 * k}px "Doto Variable", monospace`;
+  for (let b = 0; b < beats.length; b++) {
+    const t = beats[b]!;
+    if (t < start) continue;
+    if (t > start + span) break;
+    const x = Math.round(((t - start) / span) * w);
+    const down = b % 4 === 0;
+    const tall = (down ? 8 : 5) * k;
+    g.fillStyle = `rgba(${PHOSPHOR}, ${down ? 0.95 : 0.4})`;
+    g.fillRect(x, h - tall, k * (down ? 2 : 1), tall);
+    if (down) g.fillText(String(b / 4 + 1), x + 4 * k, h - k);
+  }
+
+  g.fillStyle = "rgba(255, 255, 255, 0.95)";
+  g.shadowColor = `rgba(${PHOSPHOR}, 0.9)`;
+  g.shadowBlur = 8 * k;
+  g.fillRect(w / 2 - k, 0, 2 * k, h - 12 * k);
+  g.shadowBlur = 0;
 }
 
-function PauseIcon() {
-  return (
-    <svg width="11" height="14" viewBox="0 0 11 14" aria-hidden="true">
-      <path d="M0 0h3.6v14H0zM7.4 0H11v14H7.4z" fill="currentColor" />
-    </svg>
-  );
+function drawOverview(
+  canvas: HTMLCanvasElement | null,
+  peaks: Float32Array | null,
+  position: number,
+  duration: number,
+  decoding: boolean,
+  now: number,
+): void {
+  if (!canvas) return;
+  const { w, h, k } = fitCanvas(canvas);
+  const g = canvas.getContext("2d");
+  if (!g) return;
+  g.clearRect(0, 0, w, h);
+  if (decoding) {
+    g.fillStyle = `rgba(${PHOSPHOR}, 0.6)`;
+    g.fillRect(((now / 3) % (w + 40 * k)) - 40 * k, h / 2 - k, 40 * k, 2 * k);
+    return;
+  }
+  if (!peaks || duration <= 0) return;
+  const count = Math.floor(w / (2 * k));
+  const per = peaks.length / count;
+  const played = (position / duration) * w;
+  for (let i = 0; i < count; i++) {
+    let peak = 0;
+    for (let s = Math.floor(i * per); s < Math.floor((i + 1) * per); s++) if (peaks[s]! > peak) peak = peaks[s]!;
+    const x = i * 2 * k;
+    const height = Math.max(k, peak * (h / 2 - 2 * k));
+    g.fillStyle = `rgba(${PHOSPHOR}, ${x < played ? 0.9 : 0.3})`;
+    g.fillRect(x, h / 2 - height, k, height * 2);
+  }
+  g.fillStyle = "#fff";
+  g.fillRect(played - k / 2, 0, 1.5 * k, h);
 }

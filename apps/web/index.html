@@ -6,19 +6,18 @@
     <title>Key and BPM finder: analyse any track in your browser</title>
     <meta
       name="description"
-      content="Drop an audio file to read its musical key, tempo in BPM and tuning reference in Hz. The analysis runs on your own machine, so nothing is uploaded."
+      content="Drop an audio file to read its musical key, tempo in BPM and tuning reference in Hz. The analysis runs on your own machine, so the audio is never uploaded."
     />
     <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/" />
-    <meta name="theme-color" content="#10131a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#e4e4de" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0e0f" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/" />
     <meta property="og:title" content="Key and BPM finder" />
     <meta
       property="og:description"
-      content="Find the key, tempo and tuning of any track. Runs in your browser; nothing is uploaded."
+      content="Find the key, tempo and tuning of any track. Runs in your browser; your audio is never uploaded."
     />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/styles.css" />
     <script type="module" src="/src/main.tsx"></script>
@@ -38,7 +37,7 @@
               "Musical key and relative key detection",
               "Tempo detection in beats per minute with a beat grid",
               "Tuning reference frequency in Hz and cents from A440",
-              "Runs offline in the browser with no upload"
+              "Runs in the browser without uploading the audio, and keeps working offline once loaded"
             ]
           },
           {
@@ -49,7 +48,7 @@
                 "name": "Does my audio get uploaded anywhere?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "No. The file is decoded and measured by WebAssembly running inside your browser tab. Nothing is sent to a server, there is no account, and there is nothing stored to delete afterwards."
+                  "text": "No. The file is decoded and measured by WebAssembly running inside your browser tab, and neither the audio nor its name is sent anywhere. The site counts anonymous usage, such as how long an analysis took and which key it found, without cookies and without an account."
                 }
               },
               {
@@ -65,7 +64,7 @@
                 "name": "Which audio formats can I use?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Anything your browser can decode, which normally covers mp3, wav, m4a, aac, flac, ogg and opus. Decoding happens through the browser's own audio engine, so support varies slightly between Chrome, Firefox and Safari."
+                  "text": "Anything your browser can decode: mp3, wav, m4a, flac, ogg and opus work in Chrome, Firefox and Safari, and Safari also reads aiff. Tracks up to 30 minutes long; the command line version takes any length."
                 }
               },
               {
@@ -81,7 +80,7 @@
                 "name": "Can I analyse a whole folder at once?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, with the command line version. It reads every file you pass it, can write the key and tempo into each file's tags so DJ software picks them up, and can rename files to a [key][bpm] form."
+                  "text": "Yes, with the command line version. Pass it every file in a folder at once, for example ~/samples/*.mp3, and it can write the key and tempo into each file's tags so DJ software picks them up, and rename files to a [key][bpm] form."
                 }
               },
               {
@@ -89,7 +88,7 @@
                 "name": "How accurate is the key detection?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It agrees with a trained ear on most music with clear, sustained harmony. Tracks that change key, sit on one repeated chord, or consist mostly of drums and effects have no single answer, and the strength figure shown alongside the key tells you how clear the read was."
+                  "text": "It is most reliable on music with clear, sustained harmony. Tracks that change key, sit on one repeated chord, or consist mostly of drums and effects have no single answer, and the strength figure shown alongside the key tells you how clear the read was."
                 }
               }
             ]
@@ -137,8 +136,8 @@
           The key is the note and scale a track centres on, written the way you would write it
           on a chart: A minor, B flat major. The relative key shown next to it shares exactly
           the same notes, which is why a track in A minor sits comfortably against one in C
-          major. Strength says how clearly the track committed to a single key: above about
-          0.7 is a confident read. Drum loops, sound effects and heavily processed material
+          major. Strength says how clearly the track committed to a single key, on a scale
+          from 0 to 1: the higher it is, the more you can trust the read. Drum loops, sound effects and heavily processed material
           often have no key to find, and the figure will wander.
         </p>
 
@@ -172,12 +171,17 @@
           tab. There is no account and no server-side copy. Once the page has loaded you can
           disconnect from the network and it will carry on working.
         </p>
+        <p>
+          The site does count how it is used, through PostHog: page visits, how long each
+          analysis took, and what it found (the key, tempo and tuning, but never the audio or
+          the file's name). No cookies are set and nothing identifies you.
+        </p>
       </section>
 
       <section id="terminal" class="prose">
         <h2>On the command line</h2>
         <p>
-          There is a terminal version for whole folders. It writes the key and tempo into each
+          There is a terminal version for doing a whole folder at once. It writes the key and tempo into each
           file's own tags, so Rekordbox, Serato and Traktor pick them up without you typing
           anything, and it can rename files to the bracketed form DJs use for sample folders.
         </p>

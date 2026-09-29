@@ -5,8 +5,8 @@ Finds the musical key, tempo and tuning reference of an audio file.
 Live at <https://keyandbpm.keyandbpm-web.workers.dev>.
 
 There are two ways to use it. The website analyses one track at a time and runs entirely
-in the browser, so the audio is never uploaded. The terminal version takes whole folders,
-writes the results into each file's tags, and can rename files to the bracketed form DJs
+in the browser, so the audio is never uploaded. The terminal version takes any number of
+files at once (a whole folder with `*.mp3`), writes the results into each file's tags, and can rename files to the bracketed form DJs
 use for sample libraries.
 
 ```
@@ -35,7 +35,12 @@ bun run dev
 The analysis runs in a Web Worker so the page stays responsive, and the first estimate
 appears within a second or two while a slower, more accurate pass refines it. Press play
 to check the result: if the beat marks under the waveform land with the snare, the tempo
-is right.
+is right. Files longer than 30 minutes are refused, to keep the tab within memory.
+
+Usage is counted with PostHog in cookieless mode: page visits, timings, and the key, tempo
+and tuning each analysis found. The audio and file names are never sent. Production builds
+need `VITE_POSTHOG_KEY` in `apps/web/.env.production` and fail without it; the project must
+have cookieless mode enabled in its PostHog settings.
 
 Deploying is one command once `wrangler` is logged in to Cloudflare:
 
@@ -84,7 +89,7 @@ records it was checked against.
 ## Tests
 
 ```
-bun test          # analysis, checked against synthesised signals of known key and tempo
+bun test          # analysis against synthesised signals; CLI tagging and renaming (needs ffmpeg)
 bun run typecheck
 ```
 
@@ -93,9 +98,9 @@ carries no copyrighted material and the expected answers are exact.
 
 ## Accuracy
 
-Key detection agrees with a trained ear on most music with clear, sustained harmony. It
-has nothing to find in drum loops or sound effects, and tracks that change key have no
-single answer; the strength figure is the honest signal there. Tempo is occasionally
+Key detection is most reliable on music with clear, sustained harmony. It has nothing to
+find in drum loops or sound effects, and tracks that change key have no single answer;
+the strength figure is the honest signal there. Tempo is occasionally
 reported at half or double what you would count, which happens when the rhythm genuinely
 supports both readings.
 
