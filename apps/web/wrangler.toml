@@ -1,14 +1,15 @@
 name = "keyandbpm"
 compatibility_date = "2026-09-01"
 
+# Keep the workers.dev address serving alongside the real domain, so a failed trigger
+# update can never leave the worker with no hostname. This must stay above [assets]:
+# a bare key after a table header belongs to that table, not to the top level.
+workers_dev = true
+
 # Static hosting on Workers: no server code, the whole site is uploaded as assets.
 [assets]
 directory = "./dist"
 not_found_handling = "404-page"
-
-# The workers.dev address stays enabled alongside the real domain, so a failed
-# trigger update can never leave the worker with no hostname at all.
-workers_dev = true
 
 # Both hostnames serve the same assets. The canonical tag in index.html names one of
 # them, so search engines treat them as a single page rather than duplicates.
