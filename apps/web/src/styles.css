@@ -167,6 +167,19 @@ h1 {
 
 /* ------------------------------------------------------------------ bench */
 
+/* The 432 Hz checker's answer, above the device. */
+.verdict {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--orange);
+  color: var(--ink);
+  font: 500 clamp(1rem, 2.4vw, 1.25rem) / 1.4 var(--mono);
+}
+
+.verdict[data-ready="false"] {
+  color: var(--ink-quiet);
+}
+
 .tool-mount {
   margin-bottom: clamp(3rem, 7vw, 5rem);
 }
@@ -857,8 +870,17 @@ h1 {
 
 .keys {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 22px;
+}
+
+/* The transport keys share the column evenly, however many there are. */
+.keys > .key-well {
+  flex: 1;
+}
+
+.keys .key {
+  width: 100%;
 }
 
 .key-well {

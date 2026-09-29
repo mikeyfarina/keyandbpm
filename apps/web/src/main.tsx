@@ -8,7 +8,7 @@ if (mount) {
   mount.replaceChildren();
   createRoot(mount).render(
     <StrictMode>
-      <Tool />
+      <Tool verdict={mount.dataset.verdict === "432" ? "432" : undefined} />
     </StrictMode>,
   );
 }

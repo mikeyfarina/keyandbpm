@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { confidenceLabel, formatDuration, isConcertPitch, pitchClassOf, type Scale } from "@keyandbpm/core";
+import { camelot, confidenceLabel, formatDuration, isConcertPitch } from "@keyandbpm/core";
 import type { AnalysisState } from "../analysis/useAnalysis.ts";
 import type { Player } from "../audio/player.ts";
 import { beatAt, onFrame } from "../ticker.ts";
@@ -96,7 +96,7 @@ export function Display({ state, player, lampTest }: Props) {
         <>
           <div className="display-key">
             <Lit on={key !== null}>{key ? `${key.tonic} ${key.scale === "minor" ? "MIN" : "MAJ"}` : "--- ---"}</Lit>
-            <Lit on={key !== null}>{key ? camelot(key.tonic, key.scale) : "--"}</Lit>
+            <Lit on={key !== null}>{key ? camelot(key) : "--"}</Lit>
             <small className={key ? "lit" : "ghost"}>
               REL {key ? `${key.relative.tonic} ${key.relative.scale === "minor" ? "MIN" : "MAJ"}` : "--- ---"}
             </small>
@@ -119,13 +119,6 @@ export function Display({ state, player, lampTest }: Props) {
       </div>
     </div>
   );
-}
-
-/** The Camelot code DJ software prints: minor keys are A, majors B, numbered round the circle of fifths from 8B = C. */
-function camelot(tonic: string, scale: Scale): string {
-  const pitch = pitchClassOf(tonic);
-  const major = scale === "minor" ? (pitch + 3) % 12 : pitch;
-  return `${((major * 7 + 7) % 12) + 1}${scale === "minor" ? "A" : "B"}`;
 }
 
 function Ann({ on, blink = false, children }: { on: boolean; blink?: boolean; children: React.ReactNode }) {

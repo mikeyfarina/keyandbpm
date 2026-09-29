@@ -27,6 +27,7 @@ export interface Events {
   playback_started: { position_s: number };
   seeked: { via: "pointer" | "keyboard" };
   demo_loaded: { demo: string; via: "startup" | "button" };
+  result_copied: { demo: boolean };
 }
 
 let client: PostHog | null = null;
