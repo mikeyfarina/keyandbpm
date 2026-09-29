@@ -2,6 +2,8 @@
 
 Finds the musical key, tempo and tuning reference of an audio file.
 
+Live at <https://keyandbpm.keyandbpm-web.workers.dev>.
+
 There are two ways to use it. The website analyses one track at a time and runs entirely
 in the browser, so the audio is never uploaded. The terminal version takes whole folders,
 writes the results into each file's tags, and can rename files to the bracketed form DJs
@@ -40,6 +42,10 @@ Deploying is one command once `wrangler` is logged in to Cloudflare:
 ```
 bun run --filter @keyandbpm/web deploy
 ```
+
+The site URL appears in `apps/web/index.html`, `apps/web/public/sitemap.xml` and
+`apps/web/public/robots.txt`. Change it in all three when moving to a custom domain, or
+search engines will index the wrong address.
 
 ## The terminal version
 

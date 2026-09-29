@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://keyandbpm.app/sitemap.xml
+Sitemap: https://keyandbpm.keyandbpm-web.workers.dev/sitemap.xml
