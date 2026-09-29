@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Why is my BPM half or double? Half-time vs double-time</title>
+    <meta name="description" content="Why BPM detectors report 70 instead of 140 or 174 instead of 87, how to tell which tempo is right by ear, and how to fix it in your DJ software or DAW." />
+    <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/blog/why-is-my-bpm-half-or-double/" />
+    <meta name="theme-color" content="#0e0e0f" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/blog/why-is-my-bpm-half-or-double/" />
+    <meta property="og:title" content="Why is my BPM half or double? Half-time vs double-time" />
+    <meta property="og:description" content="Why BPM detectors report 70 instead of 140 or 174 instead of 87, how to tell which tempo is right by ear, and how to fix it in your DJ software or DAW." />
+    <meta property="og:image" content="https://keyandbpm.keyandbpm-web.workers.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The KB-01 analyser showing A minor, 8A, 92.95 BPM and A4 = 438.5 Hz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/blog/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/blog/blog.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Why is my BPM half or double? Half-time vs double-time","description":"Why BPM detectors report 70 instead of 140 or 174 instead of 87, how to tell which tempo is right by ear, and how to fix it in your DJ software or DAW.","datePublished":"2026-09-29","dateModified":"2026-09-29","mainEntityOfPage":"https://keyandbpm.keyandbpm-web.workers.dev/blog/why-is-my-bpm-half-or-double/","author":{"@type":"Person","name":"Mike Farina","url":"https://github.com/mikeyfarina"},"publisher":{"@type":"Organization","name":"keyandbpm","url":"https://keyandbpm.keyandbpm-web.workers.dev/"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is a song 70 BPM or 140 BPM?","acceptedAnswer":{"@type":"Answer","text":"It can reasonably be counted as either. Go with the genre convention: trap, drill and dubstep are usually written around 140, while slow soul or lo-fi tracks are usually written around 70."}},{"@type":"Question","name":"Is drum and bass 87 or 174 BPM?","acceptedAnswer":{"@type":"Answer","text":"Drum and bass is conventionally counted at around 170 to 176 BPM. A reading of 87 is the same groove counted at half-time."}},{"@type":"Question","name":"What does half-time mean in music?","acceptedAnswer":{"@type":"Answer","text":"Half-time is a drum pattern that feels half as fast as the actual tempo, usually by putting the snare on beat 3 instead of 2 and 4. The tempo itself doesn't change."}},{"@type":"Question","name":"Why does my DJ software double the BPM of slow tracks?","acceptedAnswer":{"@type":"Answer","text":"Busy hi-hats or swung sixteenth notes create a strong pulse at twice the tempo, and the detector picks it. Set a BPM range in the analysis settings or halve the tempo on those tracks."}},{"@type":"Question","name":"Can a BPM detector be off by something other than half or double?","acceptedAnswer":{"@type":"Answer","text":"Yes, occasionally. Heavily swung music can be read at two thirds or three halves of the conventional tempo, like 80 instead of 120."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"keyandbpm","item":"https://keyandbpm.keyandbpm-web.workers.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/"},{"@type":"ListItem","position":3,"name":"Why is my BPM half or double? Half-time vs double-time","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/why-is-my-bpm-half-or-double/"}]}]}</script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="/">keyandbpm</a>
+      <nav class="masthead-nav">
+        <a href="/">analyser</a>
+        <a href="/blog/">guides</a>
+        <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+      </nav>
+    </header>
+    <main class="article">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">Guides</a></nav>
+      <h1>Why is my BPM half or double? Half-time vs double-time</h1>
+      <p class="byline">By <a href="https://github.com/mikeyfarina">Mike Farina</a> · <time datetime="2026-09-29">29 September 2026</time></p>
+      <p class="answer">Your BPM reads half or double because the same groove can be counted at two tempos: a 140 BPM trap beat with the snare on beat 3 of each bar nods like 70, and detectors pick whichever pulse looks strongest. Both numbers describe the same track, so use the genre's convention (trap and dubstep around 140, drum and bass around 174) and halve or double the reading to match.</p>
+      <h2>Why does my BPM read half or double?</h2>
+      <p>Because tempo is partly a matter of opinion, and the software has to pick one.</p>
+      <p>A tempo detector looks for regular pulses in the audio: kicks, snares, hi-hats, anything with a sharp attack. In most tracks there are pulses at several speeds at once. Hi-hats might tick at 280 per minute, the kick and snare pattern might repeat at 140, and the big accents might land at 70. All three are real. The detector scores each candidate and picks the one that fits best, and on plenty of tracks two candidates, one double the other, score almost the same.</p>
+      <p>People have the same problem. Ask a room to clap along to a trap beat and some will clap at 140 and some at 70. Neither group is wrong. They're just counting different things.</p>
+      <p>This is sometimes called the octave error in tempo detection, borrowing the idea from pitch, where a note and the note an octave above share a frequency ratio of two.</p>
+      
+      <h2>What's the difference between half-time and double-time?</h2>
+      <p>Half-time is when the drums feel like they're moving at half the actual tempo. In a half-time pattern at 140 BPM, the snare lands on beat 3 of each bar instead of on 2 and 4, so it hits once every four beats rather than every two. Your head nods at 70 while the hats and rolls keep the 140 grid busy.</p>
+      <p>Double-time is the reverse: a part that moves as if the tempo had doubled, like hats in fast sixteenths or a vocal flow that suddenly packs twice the syllables into each beat.</p>
+      <p>Neither changes the tempo of the track. They change how it feels, and feel is exactly what trips up detectors.</p>
+      
+      <h2>Which genres get the wrong BPM most often?</h2>
+      <p>The ones that live on half-time feels. These are the usual suspects, with the ranges producers commonly quote. They're conventions, not rules.</p>
+      <div class="table-wrap">
+      <table>
+      <thead><tr><th>Genre</th><th>Usually written at</th><th>Often detected as</th></tr></thead>
+      <tbody>
+      <tr><td>Trap</td><td>around 130 to 160</td><td>around 65 to 80</td></tr>
+      <tr><td>Drill</td><td>around 138 to 145</td><td>around 69 to 72</td></tr>
+      <tr><td>Dubstep</td><td>around 140</td><td>around 70</td></tr>
+      <tr><td>Drum and bass</td><td>around 170 to 176</td><td>around 85 to 88</td></tr>
+      <tr><td>Footwork, juke</td><td>around 160</td><td>around 80</td></tr>
+      <tr><td>Lo-fi hip hop</td><td>around 70 to 90</td><td>around 140 to 180</td></tr>
+      </tbody>
+      </table>
+      </div>
+      <p>Notice lo-fi goes the other way. Slow, swung tracks with busy hats can pull a detector up to double. Anything in the 60s and 70s with sixteenth-note hats is a candidate.</p>
+      <p>Swing causes a related problem. Heavily shuffled tracks can occasionally be read at two thirds or three halves of the real tempo, like 80 against 120, because the triplet grid is strong enough to look like a pulse in its own right. It's rarer than halving or doubling, but if a number looks bizarre, try multiplying by 1.5 or 0.667 before assuming the detector is broken.</p>
+      
+      <h2>How do I tell which BPM is right?</h2>
+      <p>There's rarely one objectively correct answer, but there is usually a conventional one, and that's the one worth using so your library sorts sensibly. Here's how I check:</p>
+      <ol>
+      <li>Find the snare or clap and count "one, two, three, four" at the detected tempo. Snare on "two" and "four" is a plain backbeat at that tempo. Snare only on "three" means you're counting the fast pulse of a half-time groove. Snare on every beat usually means the count is running at half speed. That tells you what the detector locked onto, not which number to keep: a half-time trap beat reads as a normal backbeat at 70, and is still conventionally filed at 140.</li>
+      <li>Check against genre convention. If a drum and bass track reads 87, it's 174. Nobody catalogues DnB at 87. Same with dubstep at 70.</li>
+      <li>Tap it yourself. Tap along to whatever your body wants to nod to and compare. If your tap is half or double the detector, you now know both candidates. There's a guide to doing that well in <a href="/blog/how-to-tap-tempo/">how to tap tempo</a>.</li>
+      <li>Play it against a grid. Hearing the beat marks against the music is the fastest way to catch a wrong number.</li>
+      </ol>
+      <p>On that last point, the <a href="/">keyandbpm analyser</a> draws a beat grid under the waveform and lets you press play to hear the track against the beat marks, along with a confidence figure for the tempo. If the marks fall on every other kick, or the grid is twice as dense as the drums, you'll hear it in a couple of bars. It runs in your browser and doesn't upload anything.</p>
+      
+      <h2>Does it matter if the BPM is half or double?</h2>
+      <p>Sometimes not at all. A 70 and a 140 grid line up on every other beat, so for quick cuts the difference is cosmetic.</p>
+      <p>It matters in three places:</p>
+      <ul>
+      <li>Sync. DJ software syncing a track tagged 87 to one tagged 174 may try to speed the first one up to double speed, or refuse. Some platforms handle half and double relationships for you, some don't. Consistent numbers remove the question.</li>
+      <li>Sorting. If half your DnB is filed at 87 and half at 174, sorting by BPM scatters it across your library.</li>
+      <li>Production. Setting your DAW project to 70 when the sample was built at 140 means your grid, your swing and your delay times all come out at the wrong resolution. Delay times in particular double or halve, which is worth checking in <a href="/blog/bpm-to-ms-delay-times/">BPM to milliseconds</a>.</li>
+      </ul>
+      
+      <h2>How to fix a half or double BPM in your DJ software</h2>
+      <p>Two approaches, and it's worth doing both.</p>
+      <p>First, set a sensible analysis range. Rekordbox, Serato and Traktor all let you limit the range their tempo detection works within, in their analysis settings. If you mostly play 120 to 130 BPM house, a range that doesn't include 60 to 65 means it can't report half-time. If you play everything from 70 BPM hip hop to 174 DnB, no single range fits, and you'll be fixing some tracks by hand.</p>
+      <p>Second, fix individual tracks. All three apps let you edit the tempo or beatgrid of a track, including halving or doubling it, when you're in their grid editing tools. Halving or doubling keeps the grid anchored to the same downbeat, so it's usually a one-click fix rather than a full re-grid.</p>
+      <p>If you tag files outside your DJ app, decide on your convention before tagging, then make sure the app isn't re-analysing and overwriting your values. <a href="/blog/tag-key-and-bpm-in-rekordbox-serato-traktor/">Tagging key and BPM for Rekordbox, Serato and Traktor</a> covers that.</p>
+      
+      <h2>How to fix it in a DAW</h2>
+      <p>Most DAWs detect tempo when you drop in audio, and they have exactly the same problem. The fix is the same: if the warp markers or grid are landing on every other kick, or twice per kick, look for a halve or double tempo command in the clip or warp settings before you start moving markers by hand. Once the clip is at the right tempo, set the project to match.</p>
+      <p>If you're making a half-time beat, I'd set the project at the higher tempo (140, not 70) and write the half-time drums on that grid. You get finer resolution for hats and rolls, and your file names and tags will match what other people expect from the genre. That's an opinion, and plenty of producers do the opposite, but pick one and be consistent.</p>
+      <p>For anything beyond half and double, like a sample that's genuinely at the wrong tempo for your beat, you're into time-stretching and repitching. <a href="/blog/how-to-match-a-sample-to-your-beat/">How to fit a sample's key and tempo to your beat</a> goes through that.</p>
+      <aside class="try">
+        <p><strong>Check a track now.</strong> Drop any audio file into the <a href="/">key and BPM finder</a> to read its key, tempo and tuning. It runs in your browser, so the file is never uploaded.</p>
+      </aside>
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <h3>Is a song 70 BPM or 140 BPM?</h3>
+        <p>It can reasonably be counted as either. Go with the genre convention: trap, drill and dubstep are usually written around 140, while slow soul or lo-fi tracks are usually written around 70.</p>
+        <h3>Is drum and bass 87 or 174 BPM?</h3>
+        <p>Drum and bass is conventionally counted at around 170 to 176 BPM. A reading of 87 is the same groove counted at half-time.</p>
+        <h3>What does half-time mean in music?</h3>
+        <p>Half-time is a drum pattern that feels half as fast as the actual tempo, usually by putting the snare on beat 3 instead of 2 and 4. The tempo itself doesn't change.</p>
+        <h3>Why does my DJ software double the BPM of slow tracks?</h3>
+        <p>Busy hi-hats or swung sixteenth notes create a strong pulse at twice the tempo, and the detector picks it. Set a BPM range in the analysis settings or halve the tempo on those tracks.</p>
+        <h3>Can a BPM detector be off by something other than half or double?</h3>
+        <p>Yes, occasionally. Heavily swung music can be read at two thirds or three halves of the conventional tempo, like 80 instead of 120.</p>
+      </section>
+      <section class="related">
+        <h2>Keep reading</h2>
+        <ul>
+          <li><a href="/blog/how-to-tap-tempo/">How to tap tempo (and when it lies)</a></li>
+          <li><a href="/blog/how-to-find-the-bpm-of-a-song/">How to find the BPM of a song</a></li>
+          <li><a href="/blog/tag-key-and-bpm-in-rekordbox-serato-traktor/">How to tag key and BPM for Rekordbox, Serato and Traktor</a></li>
+          <li><a href="/blog/what-bpm-is-trap/">What BPM is trap?</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by <a href="https://github.com/mikeyfarina">Mike Farina</a>.
+        Analysis by <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>

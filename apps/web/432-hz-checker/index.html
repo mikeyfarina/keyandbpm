@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>432 Hz checker: is this song tuned to 432 or 440?</title>
+    <meta
+      name="description"
+      content="Drop in a song to measure its tuning and see whether it is really at 432 Hz, standard 440 Hz, or somewhere else. Runs in your browser; nothing is uploaded."
+    />
+    <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/432-hz-checker/" />
+    <meta name="theme-color" content="#0e0e0f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/432-hz-checker/" />
+    <meta property="og:title" content="432 Hz checker" />
+    <meta
+      property="og:description"
+      content="Is this song really tuned to 432 Hz? Measure it in your browser; the audio is never uploaded."
+    />
+    <meta property="og:image" content="https://keyandbpm.keyandbpm-web.workers.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The KB-01 analyser showing A minor, 8A, 92.95 BPM and A4 = 438.5 Hz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "name": "432 Hz checker",
+            "url": "https://keyandbpm.keyandbpm-web.workers.dev/432-hz-checker/",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Any browser",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "description": "Measures the tuning reference of an audio file and says whether it sits at 432 Hz, 440 Hz or elsewhere, entirely in the browser."
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How can I tell if a song is tuned to 432 Hz?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Measure where its notes sit against the standard pitch grid. A song tuned to A = 432 Hz sits about 31.8 cents below 440 Hz tuning on every note. Drop the file into the checker and it reports the frequency of A4 and whether that is 432, 440 or neither."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are songs labelled 432 Hz on YouTube really 432 Hz?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Often not. Many are ordinary 440 Hz recordings pitched down by a fixed amount, which does land on 432, but others are mislabelled or were never retuned. Measuring the file is the only way to know."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why does my track read 438 or 442 Hz instead of 440?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Tape machines and turntables ran at slightly different speeds, and some orchestras tune to 442 or 443. A few hertz either side of 440 is normal and is not 432 tuning."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is my audio uploaded?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. The file is measured by WebAssembly running in your browser tab and never leaves your machine."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a class="wordmark" href="/">keyandbpm</a>
+        <nav class="masthead-nav">
+          <a href="#reading">reading the result</a>
+          <a href="/blog/a432-vs-a440/">432 vs 440</a>
+          <a href="/blog/">guides</a>
+          <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="lede">
+        <h1>Is this song tuned to 432 Hz?</h1>
+        <p class="lede-sub">
+          Drop the file on the device. It measures the pitch the recording actually sits at and
+          tells you whether that is 432, 440 or something else. Nothing is uploaded.
+        </p>
+      </section>
+
+      <div id="tool" class="tool-mount" data-verdict="432">
+        <div class="tool-skeleton" aria-hidden="true"></div>
+        <noscript>
+          <p class="noscript">
+            The checker needs JavaScript, because the measuring is done here in your browser
+            rather than on a server. The explanation below works either way.
+          </p>
+        </noscript>
+      </div>
+
+      <section id="reading" class="prose">
+        <h2>Reading the result</h2>
+        <p>
+          A song tuned to A = 432 Hz sits 31.8 cents, about a third of a semitone, below
+          standard 440 Hz tuning. The checker finds where the notes in the recording sit
+          against the 440 grid and turns that into the frequency of A4. Anything within five
+          cents of 432 counts as 432; within a cent of 440 counts as standard pitch.
+        </p>
+        <p>
+          The tuning panel shows the same thing two ways. The meter needle points at the
+          distance from 440 in cents, and the strobe row that stands still while the track
+          plays names the pitch: the top row is 432, the middle 440, the bottom 448.
+        </p>
+        <p>
+          A reading of 437 or 443 is not 432. Older records drift a few hertz because tape
+          machines and cutting lathes ran at slightly different speeds, and some orchestras
+          tune a little high. Why the difference is smaller than the claims around it suggest
+          is covered in <a href="/blog/a432-vs-a440/">432 Hz vs 440 Hz</a>, and why old records
+          wander in <a href="/blog/why-old-records-sound-out-of-tune/">why old records sound out of tune</a>.
+        </p>
+      </section>
+
+      <section class="prose">
+        <h2>Also on the display</h2>
+        <p>
+          The same measurement gives you the key and tempo. For the full analyser, with nothing
+          about 432 in the way, go to the <a href="/">key and BPM finder</a>.
+        </p>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by
+        <a href="https://github.com/mikeyfarina">Mike Farina</a>. Analysis by
+        <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How to find the BPM of a song</title>
+    <meta name="description" content="Find the BPM of a song by timing 32 beats, tapping along, lining it up in your DAW, or running it through a tempo detector. Plus the half and double trap." />
+    <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/blog/how-to-find-the-bpm-of-a-song/" />
+    <meta name="theme-color" content="#0e0e0f" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/blog/how-to-find-the-bpm-of-a-song/" />
+    <meta property="og:title" content="How to find the BPM of a song" />
+    <meta property="og:description" content="Find the BPM of a song by timing 32 beats, tapping along, lining it up in your DAW, or running it through a tempo detector. Plus the half and double trap." />
+    <meta property="og:image" content="https://keyandbpm.keyandbpm-web.workers.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The KB-01 analyser showing A minor, 8A, 92.95 BPM and A4 = 438.5 Hz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/blog/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/blog/blog.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"How to find the BPM of a song","description":"Find the BPM of a song by timing 32 beats, tapping along, lining it up in your DAW, or running it through a tempo detector. Plus the half and double trap.","datePublished":"2026-09-29","dateModified":"2026-09-29","mainEntityOfPage":"https://keyandbpm.keyandbpm-web.workers.dev/blog/how-to-find-the-bpm-of-a-song/","author":{"@type":"Person","name":"Mike Farina","url":"https://github.com/mikeyfarina"},"publisher":{"@type":"Organization","name":"keyandbpm","url":"https://keyandbpm.keyandbpm-web.workers.dev/"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What's the easiest way to find the BPM of a song?","acceptedAnswer":{"@type":"Answer","text":"Drop the file into a tempo detector or tap along with a tap tempo tool for 16 or more beats. Then play the track against a metronome at that tempo to confirm it doesn't drift."}},{"@type":"Question","name":"Is BPM the same as tempo?","acceptedAnswer":{"@type":"Answer","text":"Yes, BPM is the usual unit for tempo. Tempo can also be written with Italian terms like andante or allegro, but those are ranges, not exact numbers."}},{"@type":"Question","name":"Can a song have more than one BPM?","acceptedAnswer":{"@type":"Answer","text":"Yes. Live recordings drift, some songs switch tempo between sections, and any song can be counted at half or double speed. A single figure is the average, or the most likely pulse."}},{"@type":"Question","name":"How accurate does the BPM need to be for sampling?","acceptedAnswer":{"@type":"Answer","text":"More accurate than you'd think. A difference of 0.06 BPM at around 93 BPM adds up to about 107 ms of drift over 64 bars, so keep the decimals when you loop."}},{"@type":"Question","name":"Why does my DJ software show a different BPM than a website?","acceptedAnswer":{"@type":"Answer","text":"It's usually a half or double reading, a different edit of the track, or rounding. Check whether one number is twice the other before assuming either is wrong."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"keyandbpm","item":"https://keyandbpm.keyandbpm-web.workers.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/"},{"@type":"ListItem","position":3,"name":"How to find the BPM of a song","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/how-to-find-the-bpm-of-a-song/"}]}]}</script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="/">keyandbpm</a>
+      <nav class="masthead-nav">
+        <a href="/">analyser</a>
+        <a href="/blog/">guides</a>
+        <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+      </nav>
+    </header>
+    <main class="article">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">Guides</a></nav>
+      <h1>How to find the BPM of a song</h1>
+      <p class="byline">By <a href="https://github.com/mikeyfarina">Mike Farina</a> · <time datetime="2026-09-29">29 September 2026</time></p>
+      <p class="answer">To find the BPM of a song, start a stopwatch on a kick or snare, count 32 beats, stop it, and divide 1920 by the seconds (60 × 32 ÷ time): 32 beats in 16 seconds is 120 BPM. Tapping along with a tap tempo tool or dropping the file into a tempo detector is faster, but always check whether the answer should be halved or doubled.</p>
+      <h2>What does BPM mean?</h2>
+      <p>BPM is beats per minute: how many times you'd nod your head in sixty seconds. At 120 BPM there's a beat every half second (500 ms). At 90 BPM the gap is about 667 ms. Nothing more mysterious than that.</p>
+      <p>The tricky part is deciding which pulse counts as "the beat". A trap record can feel like 70 and be written at 140. A drum and bass tune can be counted at 174 or 87 depending on which you follow, the hats or the snare. Keep that in mind for every method below.</p>
+      
+      <h2>How to find the BPM of a song by counting</h2>
+      <p>The old radio trick is to count beats for 15 seconds and multiply by 4. It works, roughly. The trouble is that being off by one beat moves the answer by 4 BPM, which is useless if you're trying to loop a sample.</p>
+      <p>Timing a fixed number of beats is much better:</p>
+      <ol>
+        <li>Pick a clear pulse: kick, snare or a steady hi-hat.</li>
+        <li>Start a stopwatch exactly on a beat and call that beat zero.</li>
+        <li>Count 32 beats (eight bars of 4/4) and stop the watch on 32.</li>
+        <li>Work out 60 × 32 ÷ seconds, which is 1920 ÷ seconds.</li>
+      </ol>
+      <p>A few worked examples so you can sanity-check the maths:</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>32 beats took</th><th>BPM</th></tr></thead>
+        <tbody>
+          <tr><td>16.0 s</td><td>120</td></tr>
+          <tr><td>15.5 s</td><td>123.9</td></tr>
+          <tr><td>16.5 s</td><td>116.4</td></tr>
+          <tr><td>20.0 s</td><td>96</td></tr>
+          <tr><td>24.0 s</td><td>80</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Your thumb on the stopwatch will be a little late at both ends, but the errors mostly cancel and get spread over the whole 32 beats. Counting longer (64 beats) halves the effect of any slip.</p>
+      
+      <h2>How to tap the tempo</h2>
+      <p>Tap tempo is the same idea done by a computer: you hit a key on every beat and it averages the gaps. It's quick and good enough for most jobs, as long as you tap for a decent stretch and know where it goes wrong. I wrote a separate guide on <a href="/blog/how-to-tap-tempo/">how to tap tempo and when it lies</a>, including how many taps you actually need.</p>
+      <p>Most DAWs have a tap button next to the tempo field, and so do most DJ apps and metronome apps. Any of them is fine.</p>
+      
+      <h2>How to find the BPM in your DAW</h2>
+      <p>If you're going to use the song in a project anyway, let the grid do the work. Drop the audio in, find a bar that starts cleanly on a downbeat, and trim the clip to exactly four bars by ear. Then change the project tempo until four bars of the grid line up with the clip's length. When a loop of the clip plays back without a hiccup at the join, the project tempo is the song's tempo.</p>
+      <p>Many DAWs will also guess a tempo on import when you turn on warping or stretching. Treat that guess the same way you'd treat any detector's: probably right, worth checking against the grid.</p>
+      
+      <h2>How to find the BPM of a song with a tempo detector</h2>
+      <p>For a whole track, a tempo detector is the fastest option. Drop the file into the <a href="/">keyandbpm analyser</a> and it gives you the BPM, a confidence figure, and a beat grid drawn under the waveform. The part I actually use most is the play button: you hear the track against the beat marks, so a few seconds of listening tells you if the grid sits on the kicks or drifts off them.</p>
+      <p>It runs in the browser (a WebAssembly build of the Essentia audio library), the file never leaves your machine, and it works offline once the page has loaded. It also reads key and tuning while it's there. If you have a whole folder to get through, the terminal version analyses folders in one go and can write BPM and key into the file tags.</p>
+      
+      <h2>Why is my BPM half or double what I expected?</h2>
+      <p>This is the most common "wrong" answer, and it's usually not wrong, just counted at a different level. Detectors and tappers both pick a pulse, and many genres have two perfectly reasonable ones. Some rough conventions (not rules) for where people usually count:</p>
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Style</th><th>Usually counted around</th><th>Also heard as</th></tr></thead>
+        <tbody>
+          <tr><td>Trap</td><td>130 to 160</td><td>65 to 80 (half-time feel)</td></tr>
+          <tr><td>Boom bap</td><td>85 to 95</td><td>170 to 190</td></tr>
+          <tr><td>House</td><td>120 to 128</td><td>60 to 64</td></tr>
+          <tr><td>Drum and bass</td><td>170 to 176</td><td>85 to 88</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>If your answer is in the second column, halve or double it depending on where the style is normally written. The genre guides go further: <a href="/blog/what-bpm-is-trap/">what BPM is trap</a>, <a href="/blog/drum-and-bass-bpm/">drum and bass BPM</a>, and the full explanation in <a href="/blog/why-is-my-bpm-half-or-double/">why is my BPM half or double</a>.</p>
+      
+      <h2>Why does the BPM have decimals?</h2>
+      <p>Records made to a click tend to land on whole numbers. Records made by a band, sampled off vinyl, or played back at a slightly wrong speed usually don't. A detector saying 92.94 isn't being fussy.</p>
+      <p>Those decimals matter when you loop. If a sample really runs at 92.94 BPM and you set your project to 93, the sample falls behind the grid by roughly 107 ms after 64 bars. That's an obvious flam between your drums and the sample. Keep the decimal, or stretch the sample to your tempo.</p>
+      
+      <h2>What about songs where the tempo drifts?</h2>
+      <p>A live drummer speeds up in the chorus and settles in the verse. Any single BPM figure for that record is a summary of the whole thing. Play it against the beat grid: if the marks line up at the start and slide off by the bridge, you're dealing with a moving tempo, and you'll either chop the parts you need and set each one separately or warp the track by hand in your DAW.</p>
+      
+      <h2>Which method do I use?</h2>
+      <p>For one song I just want to know about, a tap or a detector. For anything I'm about to sample, a detector for the starting number, then the DAW grid to confirm it, because being out by 0.1 BPM is audible after a few bars. The stopwatch method is for when I'm away from a computer and curious.</p>
+      <aside class="try">
+        <p><strong>Check a track now.</strong> Drop any audio file into the <a href="/">key and BPM finder</a> to read its key, tempo and tuning. It runs in your browser, so the file is never uploaded.</p>
+      </aside>
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <h3>What's the easiest way to find the BPM of a song?</h3>
+        <p>Drop the file into a tempo detector or tap along with a tap tempo tool for 16 or more beats. Then play the track against a metronome at that tempo to confirm it doesn't drift.</p>
+        <h3>Is BPM the same as tempo?</h3>
+        <p>Yes, BPM is the usual unit for tempo. Tempo can also be written with Italian terms like andante or allegro, but those are ranges, not exact numbers.</p>
+        <h3>Can a song have more than one BPM?</h3>
+        <p>Yes. Live recordings drift, some songs switch tempo between sections, and any song can be counted at half or double speed. A single figure is the average, or the most likely pulse.</p>
+        <h3>How accurate does the BPM need to be for sampling?</h3>
+        <p>More accurate than you'd think. A difference of 0.06 BPM at around 93 BPM adds up to about 107 ms of drift over 64 bars, so keep the decimals when you loop.</p>
+        <h3>Why does my DJ software show a different BPM than a website?</h3>
+        <p>It's usually a half or double reading, a different edit of the track, or rounding. Check whether one number is twice the other before assuming either is wrong.</p>
+      </section>
+      <section class="related">
+        <h2>Keep reading</h2>
+        <ul>
+          <li><a href="/blog/how-to-tap-tempo/">How to tap tempo (and when it lies)</a></li>
+          <li><a href="/blog/why-is-my-bpm-half-or-double/">Why is my BPM half or double? Half-time vs double-time</a></li>
+          <li><a href="/blog/how-to-find-the-key-of-a-song/">How to find the key of a song (by ear, instrument or software)</a></li>
+          <li><a href="/blog/bpm-to-ms-delay-times/">How to time delay and reverb to the BPM, with a tempo chart</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by <a href="https://github.com/mikeyfarina">Mike Farina</a>.
+        Analysis by <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>

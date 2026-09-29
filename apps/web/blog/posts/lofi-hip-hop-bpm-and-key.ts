@@ -1,0 +1,80 @@
+import type { Post } from "../post.ts";
+
+export default {
+  slug: "lofi-hip-hop-bpm-and-key",
+  title: "Lo-fi hip hop BPM and key: what tempo and key to use",
+  description:
+    "Lo-fi hip hop usually runs 70 to 90 BPM with jazzy seventh chords. Why detectors read it as 150, and why its key and tuning are so often off.",
+  published: "2026-09-29",
+  answer:
+    "Lo-fi hip hop usually runs between 70 and 90 BPM, with 75 to 85 the sweet spot. There's no fixed key, but most tracks use seventh and ninth chords and lean minor or sit ambiguously between a major key and its relative minor, and many are slightly off A440 because of deliberate pitch and tape effects.",
+  body: `
+<h2>What BPM is lo-fi hip hop?</h2>
+<p>Most lo-fi hip hop sits between 70 and 90 BPM. The "study beats" end of the genre tends to hang around 70 to 85, slow enough that it stays in the background. Tracks nearer 90 feel more like laid-back boom bap. As with any genre, these are habits, and people break them all the time.</p>
+<p>Unlike trap or drill, lo-fi is normally written in full time: the snare lands on beats 2 and 4, and the tempo you nod to is the tempo in the session. Some producers build their drums differently (a half-time snare at 150, say), but that's the exception.</p>
+
+<h2>Why does my BPM detector say 150 for a lo-fi beat?</h2>
+<p>Three things work against beat trackers on lo-fi:</p>
+<ol>
+<li>The drums are quiet. Lo-fi drums are usually soft, filtered and sitting behind the chords. The detector has less of a pulse to find.</li>
+<li>Heavy swing. Hats and ghost notes are often swung hard or played off the grid on purpose. Unevenly spaced eighths can pull the reading to double time.</li>
+<li>Sidechain pumping. A lot of lo-fi ducks the chords against the kick, so the whole mix breathes on the beat. That helps sometimes and confuses things when the kick pattern is syncopated.</li>
+</ol>
+<p>So a 75 BPM track can come back as 150, and an 80 can come back as 160. If the number is over 120 and the track sounds sleepy, halve it. If you get something like 40, double it. The general reason tools land on the wrong multiple is in <a href="/blog/why-is-my-bpm-half-or-double/">why your BPM reads half or double</a>.</p>
+<p>The quickest check is to watch the beat grid while the track plays. The <a href="/">analyser</a> draws beat marks under the waveform, and you'll see straight away whether they land on every kick-and-snare step or on every hat.</p>
+
+<h2>What key is lo-fi hip hop in?</h2>
+<p>There's no single lo-fi key, and anyone who tells you "lo-fi is in C minor" is guessing. What the genre does share is a harmonic style:</p>
+<ul>
+<li>Extended chords. Major sevenths, minor sevenths, minor ninths. A plain triad sounds too bright and too simple; add the seventh and it sounds like lo-fi.</li>
+<li>Jazz movement. Two-chord and four-chord loops borrowed from jazz, like a ii-V-I (in C major: Dm7, G7, Cmaj7) or a chord that just alternates between two neighbouring sevenths.</li>
+<li>Soft instruments. Rhodes and other electric pianos, muted guitar, felt piano, soft pads. Their tone is as much a part of the key feel as the notes.</li>
+</ul>
+<p>Keys are often chosen by what's comfortable to play on a keyboard or guitar rather than by any theory. That's fine; there's no key that's "more lo-fi" than another. Pick the one your hands like and move on.</p>
+
+<h2>Why do key finders disagree on lo-fi tracks?</h2>
+<p>Lo-fi is almost designed to confuse key detection. Take a loop that goes Fmaj7 to Em7. Between them, those two chords use F, A, C, E, G, B and D: every note of C major, which is also every note of A minor. The loop never lands on C or on A minor, so nothing in the music says which one is home. One detector says C major, another says A minor, a third might pick F major, and each of them has a case.</p>
+<p>When that happens, look at the key strength figure. The analyser here gives one from 0 to 1, along with the relative key. A low figure is the tool telling you the music is ambiguous, which on lo-fi is often the honest answer. For practical purposes, if you're adding a bassline or a melody, C major and A minor use the same notes, so either answer works. <a href="/blog/why-key-finders-disagree/">Why key detection tools give different answers</a> goes further into modes, relative keys and why the strength number matters.</p>
+
+<h2>Why is my lo-fi sample out of tune?</h2>
+<p>Because lo-fi producers detune things on purpose, and then the effects detune them some more.</p>
+<ul>
+<li>Repitched samples. A loop slowed down to fit a 75 BPM beat also drops in pitch, and unless the change happens to be a whole number of semitones, it now sits between keys.</li>
+<li>Tape wobble. Wow and flutter plug-ins (or real cassette decks) wobble the pitch a little, all the time. The average pitch can end up sharp or flat of standard tuning.</li>
+<li>Old source records. Samples from older records often weren't at A440 to start with.</li>
+</ul>
+<p>The analyser reports tuning as the frequency of A4 in Hz and as cents from 440, and it measures the key against that tuning, so a loop that's 20 cents flat still gets a proper key name. Once you know it's, say, 20 cents flat, set your synth or sampler 20 cents flat too and the new parts will sit with the sample instead of fighting it. <a href="/blog/how-to-pitch-a-sample-in-cents/">How to fine-tune a sample in cents</a> covers how to do that and when leaving it detuned is the better call.</p>
+
+<h2>Where did lo-fi hip hop come from?</h2>
+<p>The genre's roots are in instrumental hip hop of the 1990s and 2000s. Two names come up constantly. J Dilla, whose loose, unquantised drums and warm sampling set the feel, most famously on <em>Donuts</em> (2006). And Nujabes, the Japanese producer whose jazzy, melodic beats reached a huge audience through the soundtrack to the anime <em>Samurai Champloo</em> (2004).</p>
+<p>The version most people know now took shape on YouTube in the late 2010s, with 24-hour live streams of "beats to relax/study to" playing under a looping anime-style animation. That's when the format settled: slow tempos, gentle drums, jazzy chords, vinyl crackle and tape hiss, tracks around two minutes long.</p>
+<p>If you want the harder-hitting ancestor, <a href="/blog/what-bpm-is-boom-bap/">boom bap</a> covers the 85 to 95 BPM sound lo-fi grew out of, and its swing.</p>
+
+<h2>What BPM and key should I make a lo-fi beat in?</h2>
+<p>My usual starting point is 78 to 84 BPM, with MPC-style swing somewhere in the mid-50s on the hats, and a chord loop of two to four seventh chords in whatever key sits well under my hands. Then I play in the drums rather than drawing them, and only fix what's genuinely wrong.</p>
+<p>If you're building from a sample, let it choose. Find its tempo and key first, including how far it is off 440, and build everything else around that.</p>
+`,
+  faq: [
+    {
+      q: "What is the best BPM for lo-fi hip hop?",
+      a: "There's no best, but 75 to 85 BPM is the most common zone. Go slower for a sleepier background track or nearer 90 for something closer to boom bap.",
+    },
+    {
+      q: "What key is most lo-fi music in?",
+      a: "No key dominates. What lo-fi tracks share is extended chords like major and minor sevenths and ninths, often in loops that sit between a major key and its relative minor.",
+    },
+    {
+      q: "Why does my lo-fi track read as 160 BPM?",
+      a: "Quiet, swung drums can make a beat tracker count the hi-hats as beats. Halve the number and check it against the snare, which should fall on beats 2 and 4.",
+    },
+    {
+      q: "Should lo-fi be tuned to 440 Hz?",
+      a: "It doesn't have to be, and a lot of it isn't because of pitched samples and tape effects. What matters is that all the parts in the track agree with each other.",
+    },
+    {
+      q: "Why does one key finder say C major and another says A minor?",
+      a: "They use the same seven notes, and jazzy lo-fi loops often never settle on either chord. Both answers work for writing over the track.",
+    },
+  ],
+  related: ["why-is-my-bpm-half-or-double", "why-key-finders-disagree", "how-to-pitch-a-sample-in-cents", "what-bpm-is-boom-bap"],
+} satisfies Post;

@@ -9,6 +9,10 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [react()],
     worker: { format: "es" },
-    build: { target: "es2022", assetsInlineLimit: 0 },
+    build: {
+      target: "es2022",
+      assetsInlineLimit: 0,
+      rollupOptions: { input: { main: "index.html", checker: "432-hz-checker/index.html" } },
+    },
   };
 });

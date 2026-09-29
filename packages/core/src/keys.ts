@@ -50,3 +50,10 @@ export function keyName(pitchClass: number, scale: Scale): KeyName {
 export function relativeKey(pitchClass: number, scale: Scale): KeyName {
   return scale === "major" ? keyName(pitchClass - 3, "minor") : keyName(pitchClass + 3, "major");
 }
+
+/** The Camelot code DJ software prints: minor keys are A, majors B, numbered round the circle of fifths from 8B = C. */
+export function camelot(key: Pick<KeyName, "tonic" | "scale">): string {
+  const pitch = pitchClassOf(key.tonic);
+  const major = key.scale === "minor" ? (pitch + 3) % 12 : pitch;
+  return `${((major * 7 + 7) % 12) + 1}${key.scale === "minor" ? "A" : "B"}`;
+}

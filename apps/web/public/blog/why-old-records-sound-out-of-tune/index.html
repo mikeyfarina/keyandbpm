@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Why old records sound out of tune (and aren't at 440 Hz)</title>
+    <meta name="description" content="Old records drift off A440 because tape machines, lathes and turntables ran fast or slow, and varispeed was used on purpose. A 1% speed change is 17 cents." />
+    <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/blog/why-old-records-sound-out-of-tune/" />
+    <meta name="theme-color" content="#0e0e0f" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/blog/why-old-records-sound-out-of-tune/" />
+    <meta property="og:title" content="Why old records sound out of tune (and aren't at 440 Hz)" />
+    <meta property="og:description" content="Old records drift off A440 because tape machines, lathes and turntables ran fast or slow, and varispeed was used on purpose. A 1% speed change is 17 cents." />
+    <meta property="og:image" content="https://keyandbpm.keyandbpm-web.workers.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The KB-01 analyser showing A minor, 8A, 92.95 BPM and A4 = 438.5 Hz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/blog/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/blog/blog.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Why old records sound out of tune (and aren't at 440 Hz)","description":"Old records drift off A440 because tape machines, lathes and turntables ran fast or slow, and varispeed was used on purpose. A 1% speed change is 17 cents.","datePublished":"2026-09-29","dateModified":"2026-09-29","mainEntityOfPage":"https://keyandbpm.keyandbpm-web.workers.dev/blog/why-old-records-sound-out-of-tune/","author":{"@type":"Person","name":"Mike Farina","url":"https://github.com/mikeyfarina"},"publisher":{"@type":"Organization","name":"keyandbpm","url":"https://keyandbpm.keyandbpm-web.workers.dev/"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many cents is a 1% speed change?","acceptedAnswer":{"@type":"Answer","text":"About 17 cents: 17.2 cents faster, 17.4 cents slower. The tempo moves by the same 1%."}},{"@type":"Question","name":"Were old records sped up on purpose?","acceptedAnswer":{"@type":"Answer","text":"Sometimes. Varispeed was a standard studio control, and engineers used it to brighten vocals, make parts easier to play, match an instrument that couldn't be retuned, or change a mix's feel."}},{"@type":"Question","name":"Why does my sample sound flat against my 808?","acceptedAnswer":{"@type":"Answer","text":"The record is probably tuned below 440, often by 10 to 40 cents. Measure the offset and detune the sample by that many cents, or retune your 808 and synths to match the sample."}},{"@type":"Question","name":"Is it the record or my turntable?","acceptedAnswer":{"@type":"Answer","text":"Check your turntable with a strobe or a speed app, then measure the record again. If the deck is on speed and the pitch is still off, the offset is on the record."}},{"@type":"Question","name":"Does fixing the pitch of a sample change its BPM?","acceptedAnswer":{"@type":"Answer","text":"Only if you repitch it, which changes speed and pitch together by the same ratio. A pitch shift with time-stretching keeps the tempo where it was."}}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"keyandbpm","item":"https://keyandbpm.keyandbpm-web.workers.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/"},{"@type":"ListItem","position":3,"name":"Why old records sound out of tune (and aren't at 440 Hz)","item":"https://keyandbpm.keyandbpm-web.workers.dev/blog/why-old-records-sound-out-of-tune/"}]}]}</script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="/">keyandbpm</a>
+      <nav class="masthead-nav">
+        <a href="/">analyser</a>
+        <a href="/blog/">guides</a>
+        <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+      </nav>
+    </header>
+    <main class="article">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/blog/">Guides</a></nav>
+      <h1>Why old records sound out of tune (and aren't at 440 Hz)</h1>
+      <p class="byline">By <a href="https://github.com/mikeyfarina">Mike Farina</a> · <time datetime="2026-09-29">29 September 2026</time></p>
+      <p class="answer">Old records are often a few cents to a quarter of a semitone away from A440 because their pitch was set by machines and by whatever the band tuned to, not by a tuner. Tape machines, cutting lathes and turntables all ran slightly fast or slow, engineers used varispeed on purpose, and every 1% change in speed moves pitch by about 17 cents and tempo by 1%.</p>
+      <p>If you sample records, you've hit this. You chop a loop from a 60s soul single, drop it over your drums, play a bassline in the key the loop is supposed to be in, and it sounds sour. Nothing's wrong with your ears. The record just isn't at 440.</p>
+      
+      <h2>Why aren't old records tuned to 440 Hz?</h2>
+      <p>Partly because 440 wasn't universal yet. An international conference recommended A = 440 in 1939, and it only became an ISO standard in 1975. Before and for a long while after, a lot of music was played at whatever pitch the room agreed on.</p>
+      <p>And in practice bands tuned to each other, not to a reference. If the session had a piano, everyone tuned to the piano, and studio pianos weren't always at exactly 440. Horn sections pulled sharp as they warmed up. Nobody had a tuner clipped to the headstock. The band could be perfectly in tune with itself and 10 or 20 cents away from standard pitch.</p>
+      <p>That's the recording. Then the machinery gets involved.</p>
+      
+      <h2>How does tape speed change pitch?</h2>
+      <p>A tape machine stores sound as a pattern along the tape. Play that tape back faster than it was recorded and every cycle of every wave passes the head in less time, so every frequency goes up by the same ratio. Play it slower and everything goes down. The same applies to a vinyl groove passing a stylus.</p>
+      <p>The two things always move together: speed up by 1% and you get 1% more beats per minute and 1% higher frequencies. In musical terms, pitch change in cents is 1200 × log2(speed ratio), so a 1% speed change is about 17 cents. Here's how that scales:</p>
+      <div class="table-wrap">
+      <table>
+      <thead><tr><th>Speed change</th><th>Pitch change</th><th>A4 ends up at</th><th>A 90 BPM track becomes</th></tr></thead>
+      <tbody>
+      <tr><td>−3%</td><td>−52.7 cents</td><td>426.8 Hz</td><td>87.3 BPM</td></tr>
+      <tr><td>−2%</td><td>−35.0 cents</td><td>431.2 Hz</td><td>88.2 BPM</td></tr>
+      <tr><td>−1%</td><td>−17.4 cents</td><td>435.6 Hz</td><td>89.1 BPM</td></tr>
+      <tr><td>−0.5%</td><td>−8.7 cents</td><td>437.8 Hz</td><td>89.6 BPM</td></tr>
+      <tr><td>+0.5%</td><td>+8.6 cents</td><td>442.2 Hz</td><td>90.5 BPM</td></tr>
+      <tr><td>+1%</td><td>+17.2 cents</td><td>444.4 Hz</td><td>90.9 BPM</td></tr>
+      <tr><td>+2%</td><td>+34.3 cents</td><td>448.8 Hz</td><td>91.8 BPM</td></tr>
+      <tr><td>+3%</td><td>+51.2 cents</td><td>453.2 Hz</td><td>92.7 BPM</td></tr>
+      </tbody>
+      </table>
+      </div>
+      <p>A whole semitone is about 5.9% faster or 5.6% slower. So a machine running 3% off doesn't put you in a different key, but it does put you roughly halfway between two, which is the worst place to be when you're trying to play along.</p>
+      
+      <h2>What is varispeed?</h2>
+      <p>Varispeed is a control on a tape machine that lets the engineer run it faster or slower than its nominal speed. It was a normal studio tool, not a fault, and it gets used for a few reasons:</p>
+      <ul>
+      <li>Recording a part with the tape slowed down, so it plays back higher and a touch faster. A vocal done this way comes out brighter; a tricky instrumental part becomes easier to play.</li>
+      <li>Nudging a finished mix up a little to make it feel more energetic, or down to make it feel heavier.</li>
+      <li>Matching a new overdub to an instrument that couldn't be retuned, such as a piano that sat a bit flat.</li>
+      <li>Joining takes or sections that were recorded on different days at slightly different speeds.</li>
+      </ul>
+      <p>Any of these leaves the final record away from 440 by exactly the ratio of the speed change. The pitch offset is baked in; there's no way to tell from the audio alone which step caused it.</p>
+      
+      <h2>Do lathes and turntables make it worse?</h2>
+      <p>They can. A disc is cut on a lathe turning at a set speed, and played back on a turntable that's meant to turn at the same speed. Any mismatch between the two shifts the pitch.</p>
+      <p>78s are a good example of how loose this used to be. Very early discs weren't all cut at 78 at all, and even after the speed settled, the machines that drove lathes gave slightly different results depending on the local mains frequency: about 78.26 rpm in 60 Hz countries and about 77.92 rpm in 50 Hz countries. That's a 7.5 cent difference built in before anyone touches the pitch control.</p>
+      <p>Then there's the transfer. A lot of old music you'll find online was digitised from vinyl or tape at some point, on a deck whose pitch was set by eye, or from a cassette dub. Cassette and cheap turntable speeds can easily be a percent or so off, and that ends up in the file you're sampling.</p>
+      
+      <h2>Why does the pitch wander?</h2>
+      <p>Everything above gives you a fixed offset: the whole track is, say, 18 cents sharp. Worn tape and turntables also add movement. Slow wobble is called wow and fast wobble flutter, and both come from the speed not being perfectly steady. Tape can also stretch, and a tape that was stored badly can play back slightly flat in some sections and fine in others.</p>
+      <p>That wander is small on a good transfer, but it makes a tuning measurement an average, and it can blur the harmony enough that key finders give a weaker or different answer. <a href="/blog/why-key-finders-disagree/">Why key finders disagree</a> goes into that.</p>
+      
+      <h2>How to find out how far off a record is</h2>
+      <p>You can do it by ear. Loop a sustained note or chord, play the same note on a keyboard, and move the keyboard's fine tune until the beating between them disappears. The fine-tune amount is your offset. A tuner plugin on a held bass note works too.</p>
+      <p>Or drop the file on the <a href="/">keyandbpm analyser</a>. It shows the tuning as Hz of A4 and as cents from 440, and it measures the key against the record's own tuning, so a record that's 30 cents flat still gets the right key rather than being pushed toward the wrong neighbour. If all you want to know is whether a file sits nearer 432 or 440, the <a href="/432-hz-checker/">432 Hz checker</a> answers that directly.</p>
+      
+      <h2>What to do about it when you sample</h2>
+      <p>You've got two choices, and both are fine:</p>
+      <ol>
+      <li>Tune the sample to 440. Detune it by the measured offset in cents, and then it'll sit with your 808s and synths. <a href="/blog/how-to-pitch-a-sample-in-cents/">How to fine-tune a sample in cents</a> covers the exact steps.</li>
+      <li>Tune everything else to the sample. Set the master tune on your synths to match (a record reading 444 Hz means master tune 444). I usually do this when the sample carries the whole track and detuning it would smear the transients.</li>
+      </ol>
+      <p>If you correct the pitch by repitching (the sampler-style way, speed and pitch together), the tempo changes by the same ratio. At 90 BPM a 1% correction is 0.9 BPM, enough to drift against a grid over a few bars. Time-stretch or re-measure the tempo afterwards. <a href="/blog/how-to-match-a-sample-to-your-beat/">How to fit a sample's key and tempo to your beat</a> explains when to repitch and when to stretch.</p>
+      <aside class="try">
+        <p><strong>Check a track now.</strong> Drop any audio file into the <a href="/">key and BPM finder</a> to read its key, tempo and tuning. It runs in your browser, so the file is never uploaded.</p>
+      </aside>
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <h3>How many cents is a 1% speed change?</h3>
+        <p>About 17 cents: 17.2 cents faster, 17.4 cents slower. The tempo moves by the same 1%.</p>
+        <h3>Were old records sped up on purpose?</h3>
+        <p>Sometimes. Varispeed was a standard studio control, and engineers used it to brighten vocals, make parts easier to play, match an instrument that couldn't be retuned, or change a mix's feel.</p>
+        <h3>Why does my sample sound flat against my 808?</h3>
+        <p>The record is probably tuned below 440, often by 10 to 40 cents. Measure the offset and detune the sample by that many cents, or retune your 808 and synths to match the sample.</p>
+        <h3>Is it the record or my turntable?</h3>
+        <p>Check your turntable with a strobe or a speed app, then measure the record again. If the deck is on speed and the pitch is still off, the offset is on the record.</p>
+        <h3>Does fixing the pitch of a sample change its BPM?</h3>
+        <p>Only if you repitch it, which changes speed and pitch together by the same ratio. A pitch shift with time-stretching keeps the tempo where it was.</p>
+      </section>
+      <section class="related">
+        <h2>Keep reading</h2>
+        <ul>
+          <li><a href="/blog/how-to-pitch-a-sample-in-cents/">How to fine-tune a sample in cents</a></li>
+          <li><a href="/blog/a432-vs-a440/">432 Hz vs 440 Hz: what the tuning difference actually does</a></li>
+          <li><a href="/blog/how-to-match-a-sample-to-your-beat/">How to match a sample to your beat's key and tempo</a></li>
+          <li><a href="/blog/why-key-finders-disagree/">Why key finders disagree (and which answer to trust)</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by <a href="https://github.com/mikeyfarina">Mike Farina</a>.
+        Analysis by <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+import type { Post } from "../post.ts";
+
+export default {
+  slug: "how-to-find-samples-for-beats",
+  title: "Where to find samples for beats",
+  description:
+    "Where producers find samples for beats: records, YouTube, sample packs and libraries, plus sample clearance basics and what each source lets you release.",
+  published: "2026-09-29",
+  answer:
+    "The main places to find samples for beats are old records (thrift stores, record fairs, Discogs), royalty-free sample packs and libraries, services that license original recordings, and samples you make yourself. Packs and your own recordings are safe to release; anything lifted from a commercial record needs clearance from both the recording owner and the songwriters' publisher before you put it out.",
+  body: `
+<p>Every producer I know has a different answer to this, and most of them are right for the kind of music they make. The real question is less "where" and more "what am I allowed to do with it afterwards". A loop that sounds perfect is worthless if you can't release the beat, so this guide goes through each source with that in mind.</p>
+
+<h2>Where do producers find samples for beats?</h2>
+<p>Roughly five places, in order of how much legal homework they bring:</p>
+<ol>
+  <li>Your own recordings. Play something, record it, mangle it. You own it outright.</li>
+  <li>Royalty-free sample packs and libraries. Loops and one-shots sold (or given away) with a licence to use them in your music.</li>
+  <li>Loop kits from other producers. Often free or cheap, often with conditions attached.</li>
+  <li>Licensing services for original recordings. Platforms that let you sample real old records and pay for the clearance up front.</li>
+  <li>Records, streaming and YouTube. The classic crate-digging route. Best sounds, most paperwork.</li>
+</ol>
+
+<h2>Crate digging: records and where to buy them</h2>
+<p>Digging means going through old records looking for a few bars nobody else has used. Thrift stores, charity shops, record fairs, car boot sales and the dollar bin at a proper record shop are where it's always happened. Discogs is useful for tracking down a specific pressing once you know what you're after, less so for stumbling on things.</p>
+<p>What to listen for: intros and outros before the vocal comes in, breakdowns where the band drops to one or two instruments, and anything with a long, clean sustain you could chop. Library music (records made for TV and film use in the 60s and 70s) has always been popular for exactly this reason: lots of short, vocal-free cues.</p>
+<p>Old records bring a quirk you need to know about. Many were never tuned to A440, and a vinyl rip picks up any speed error from the turntable. So the sample can sit 20 or 30 cents away from the rest of your beat. Drop the rip on the <a href="/">analyser</a> before you start and it'll give you the key, the tempo and the tuning offset in one go. There's more on why this happens in <a href="/blog/why-old-records-sound-out-of-tune/">why old records aren't tuned to 440 Hz</a>.</p>
+
+<h2>Can I sample from YouTube?</h2>
+<p>You can find almost anything on YouTube, and plenty of producers dig there. Two things to be clear on. First, downloading audio from YouTube is against YouTube's terms of service unless the video offers a download. Second, and more to the point, the fact that something is on YouTube gives you no rights to it at all. A 1974 soul record uploaded by a random account is still owned by whoever owned it in 1974 (or whoever bought the catalogue since).</p>
+<p>Sound quality is the other catch. YouTube audio is compressed, and by the time you've pitched and stretched it, the artefacts get louder. If a YouTube find turns into a real track, buy the record or a lossless copy and resample from that.</p>
+
+<h2>Sample packs and libraries</h2>
+<p>This is where most people start now, and for good reason. Subscription libraries like Splice, and the long list of labels selling packs directly, give you loops that are already labelled with key and BPM and come with a licence to use them in released music. You pay once (or monthly) and you don't owe anyone a share.</p>
+<p>Two cautions. Read the licence, because "royalty-free" means you don't pay per use, not that anything goes. Most packs forbid reselling the sounds on their own or putting them into another sample pack. And popular loops get used a lot, which is fine until you hear your melody on someone else's single. Chopping and re-pitching a pack loop (see <a href="/blog/how-to-flip-a-sample/">how to flip a sample</a>) makes it yours in practice even though the licence already made it yours on paper.</p>
+<p>The key and BPM labels on pack files are usually right, but not always. Some are labelled with the key the melody was written in when the loop spends most of its time on the relative key, and some tempos come out at half or double what you'd call it. Worth a quick check before you build a beat around one.</p>
+
+<h2>Loop kits from other producers</h2>
+<p>Melody makers put out loop kits constantly, often free in exchange for an email. Many of these come with a condition: if you place a beat using their loop, they want a writing split or a credit, and sometimes a fee for a commercial release. That's fair enough, but it's a condition, and you need to know it before the beat goes out. Keep the readme. If there isn't one, ask the maker in writing.</p>
+
+<h2>Sample clearance basics</h2>
+<p><em>This is general information about how sample clearance usually works, not legal advice. Copyright law differs between countries and the details of a real deal depend on the contracts involved. If a release with an uncleared sample matters to you, talk to a music lawyer or a clearance specialist.</em></p>
+<p>With that said, the broad shape is the same almost everywhere:</p>
+<ul>
+  <li><strong>Two copyrights sit in most records.</strong> One covers the sound recording itself (the master, usually owned by a label). The other covers the underlying song: the melody, chords and lyrics (the composition, owned by the songwriters and their publishers). Sampling a record uses both.</li>
+  <li><strong>Clearing a sample means getting permission from both owners.</strong> Usually that's a fee, a share of the new song's publishing, or both. There's no fixed rate; it's negotiated.</li>
+  <li><strong>Replaying it (an interpolation) avoids the master, not the song.</strong> If you or a musician re-record the part, you don't need the label, but you still need the publisher's permission because the composition is the same.</li>
+  <li><strong>How short or how chopped it is doesn't make it safe on its own.</strong> Plenty of producers believe in a "few seconds is fine" rule. It isn't a reliable rule anywhere I'm aware of, and courts have treated even very short samples as infringement.</li>
+  <li><strong>Public domain is narrower than people think.</strong> An old composition may be out of copyright while a particular recording of it isn't, and the rules for recordings differ from country to country.</li>
+  <li><strong>Free beats and mixtapes are not exempt.</strong> Not charging money doesn't remove the need for permission, although it does change how likely anyone is to come after you.</li>
+</ul>
+<p>In practice a lot of beats with uncleared samples get made, sold as leases and uploaded, and the problem only shows up when a track starts earning or gets picked up by a label. Distributors and streaming platforms can pull tracks, and a label deal will usually ask you to confirm everything is cleared. Plan for that moment early.</p>
+
+<h2>Services that license original recordings</h2>
+<p>A middle route has grown up between packs and digging: platforms like Tracklib that have deals with the owners of real old records, so you can sample the original recording and pay a set clearance price when you release. The catalogue is smaller than the whole history of recorded music, obviously, but it removes most of the negotiation. Read how each one prices a release, because it often depends on how the track is distributed.</p>
+
+<h2>Making your own samples</h2>
+<p>A lot of the "samples" on current records were never on an old record. Producers write a soul-style loop, record it, run it through tape saturation, a vinyl emulation and a low-pass filter, then chop it as if it had been dug. You own it, there's nothing to clear, and nobody else has it. I'd recommend this more than it gets recommended. Even a rough keyboard part bounced to audio and pitched down a few semitones stops sounding like a keyboard part.</p>
+<p>Field recordings count too. Room tone, a radiator knocking, a friend humming a line into a phone. They make good texture layers under a main sample.</p>
+
+<h2>What to do once you've found one</h2>
+<ol>
+  <li>Get the best-quality copy you can: lossless if possible, highest bitrate if not.</li>
+  <li>Find its key, tempo and tuning. Your ears and a keyboard work (see <a href="/blog/what-key-is-this-sample-in/">how to find the key of a sample</a>), or drop it on the <a href="/">key and BPM finder</a>, which runs in the browser and never uploads the file.</li>
+  <li>Decide whether you'll move the sample to fit the beat or build the beat around the sample. <a href="/blog/how-to-match-a-sample-to-your-beat/">Matching a sample to your beat</a> covers the maths.</li>
+  <li>Write down where it came from. Artist, title, label, year, pressing if it's vinyl. When a beat gets placed six months later, you'll need that list, and you won't remember.</li>
+</ol>
+`,
+  faq: [
+    {
+      q: "Do I need to clear a sample if I'm giving the beat away for free?",
+      a: "Generally yes. Permission is about using someone else's recording and song, not about whether you charge, though free releases are less likely to attract a claim. This is general information, not legal advice.",
+    },
+    {
+      q: "Is there a number of seconds you can sample without clearing it?",
+      a: "No reliable one. The idea that a few seconds is always fine is a myth, and short samples have been found to infringe. Length can matter in some legal arguments, but it isn't a safe rule to rely on.",
+    },
+    {
+      q: "Are royalty-free samples free to use in songs I sell?",
+      a: "Usually yes, in the sense that you don't owe the pack maker per-use fees or royalties. The licence still sets limits, most often a ban on reselling the sounds on their own, so read it for each pack.",
+    },
+    {
+      q: "What's the difference between a sample and an interpolation?",
+      a: "A sample uses the original recording. An interpolation re-records the melody or lyrics, so it only needs permission from the songwriters' publisher, not the label that owns the recording.",
+    },
+    {
+      q: "How do I find the key and BPM of a sample I found?",
+      a: "Loop it and find the root note on a keyboard, or tap along for tempo. For a faster read that also shows tuning, drop the file on a browser analyser like keyandbpm, which shows key, BPM and cents from 440 without uploading the file.",
+    },
+  ],
+  related: [
+    "what-key-is-this-sample-in",
+    "how-to-match-a-sample-to-your-beat",
+    "how-to-flip-a-sample",
+    "why-old-records-sound-out-of-tune",
+  ],
+} satisfies Post;

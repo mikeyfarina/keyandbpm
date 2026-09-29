@@ -1,0 +1,87 @@
+import type { Post } from "../post.ts";
+
+export default {
+  slug: "how-to-find-the-key-of-a-song",
+  title: "How to find the key of a song (by ear, instrument or software)",
+  description:
+    "Find the key of a song by humming the home note, checking the third, and testing the scale. Plus how chords, bass lines and key detection software help.",
+  published: "2026-09-29",
+  answer:
+    "To find the key of a song, loop the chorus, hum the note the music wants to rest on, and find that note on a keyboard: that's the tonic. Then play the note three semitones above it and the note four above; if the three-semitone note fits, the song is minor, if the four fits, it's major. Check by playing the whole scale over the track, or drop the file into a key detector and confirm the result by ear.",
+  body: `
+<h2>What does "the key of a song" actually mean?</h2>
+<p>A key is two things: a home note (the tonic) and a scale built around it, usually major or minor. A song in A minor keeps pulling back to A, and most of its melody and chords come from the notes A B C D E F G.</p>
+<p>Look at those seven notes again. They're the same seven notes as C major. The only difference between A minor and C major is which note sounds like home, and that one fact causes most of the arguments about keys you'll ever have. There's a whole post on it: <a href="/blog/why-key-finders-disagree/">why key finders disagree</a>.</p>
+
+<h2>How to find the key of a song by ear</h2>
+<p>You don't need perfect pitch. You need a keyboard (a free piano app on your phone is fine) and about five minutes.</p>
+<ol>
+  <li>Loop the chorus or the last few bars. Choruses and endings tend to land on the home chord.</li>
+  <li>Hum the note that feels like the song could stop on it. Not the highest note, the most settled one. Keep humming it through a pause; if it still feels right in the silence, you're close.</li>
+  <li>Press keys on the keyboard until one matches your hum. That's your likely tonic.</li>
+  <li>Play the note three semitones above it, then the note four semitones above it, while the track plays. Three semitones up is a minor third, four is a major third. Whichever one blends tells you minor or major.</li>
+  <li>Play the whole scale over the track. If nothing clashes, you've got it.</li>
+</ol>
+<p>If one note keeps sounding wrong, or the scale fits but the tonic feels off, you've probably landed on the relative key. Try the note three semitones below your tonic (if you guessed major) or three above (if you guessed minor) and repeat step 4. There's a full list of these pairs in <a href="/blog/relative-major-and-minor-keys/">relative major and minor keys</a>.</p>
+<p>I usually start with the bass line before anything else. In most pop, hip hop and dance music the bass plays the root of each chord, and the note it returns to at the end of a phrase is very often the tonic. Vocals wander. Bass lines go home.</p>
+
+<h2>How do you tell if a song is major or minor?</h2>
+<p>Forget "happy or sad". Plenty of heartbreak songs are in major keys and plenty of party records are in minor. Use the third, as in step 4 above. It's a physical test, and it doesn't depend on your mood.</p>
+<p>One thing trips people up. Minor-key songs often use a major chord on the fifth note of the scale because it pulls harder back to the tonic. In A minor that's an E major chord, which contains G sharp, a note that isn't in the plain A minor scale. If that single note is the only thing clashing with your minor scale, don't throw out your answer. You're almost certainly still in the minor key; the song is just using the raised seventh (that's what the harmonic minor scale is).</p>
+
+<h2>How to find the key with a guitar or keyboard</h2>
+<p>If you can play along, work out the chords and let them tell you. Write down the chord for each bar of a verse and a chorus. Then find a major key that contains all of them.</p>
+<p>Every major key has the same pattern of chords built on its scale: major on the 1st, 4th and 5th notes, minor on the 2nd, 3rd and 6th, and a diminished chord on the 7th. In C major that gives you:</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Scale note</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>A</th><th>B</th></tr></thead>
+  <tbody><tr><th>Chord</th><td>C</td><td>Dm</td><td>Em</td><td>F</td><td>G</td><td>Am</td><td>Bdim</td></tr></tbody>
+</table>
+</div>
+<p>Say the song loops Am, F, C, G. All four chords live in C major, which also means they live in A minor. Now you listen for which one feels like the resting point. If the loop sounds settled when it comes back round to Am, call it A minor. If it sounds like it's been waiting to get to C, call it C major. Some progressions honestly sit on the fence, and that's fine.</p>
+<p>Two quick traps for guitarists. If the player uses a capo, the shapes lie: G shapes with a capo on the 2nd fret sound in A. And old recordings are often slightly sharp or flat of standard tuning, so your in-tune guitar can sound sour against them even when your chords are right. More on that below.</p>
+
+<h2>How to find the key of a song with software</h2>
+<p>The quickest route is a key detector. Drop the file into the <a href="/">keyandbpm analyser</a> and it shows the key (tonic plus major or minor), the relative key, and a strength figure from 0 to 1. It runs in your browser using a WebAssembly build of Essentia, the audio library from the Music Technology Group at Universitat Pompeu Fabra, so the file is never uploaded and there's no account.</p>
+<p>How I read the result:</p>
+<ul>
+  <li>A high strength figure means the track fits its key clearly. I'll trust it and move on.</li>
+  <li>A low figure means the pitch content fits more than one key nearly as well. Check the relative key it lists against your ear using the tests above.</li>
+  <li>If the answer looks off by a fifth (it says G major and you hear C major), that's a classic detector confusion rather than a random error.</li>
+</ul>
+<p>DJ software such as Rekordbox, Serato and Traktor also analyses key when you import tracks, and that's fine for mixing. Whatever you use, treat the number as a strong suggestion and give it ten seconds of listening before you commit to it.</p>
+
+<h2>What if the record isn't tuned to A440?</h2>
+<p>Lots of older records sit somewhere between two keys because of tape speed, varispeed or the lathe. A song cut 30 cents sharp of standard pitch will make a keyboard tuned to A440 sound slightly wrong against every note, and that can send you hunting for a key that doesn't exist. The reasons are covered in <a href="/blog/why-old-records-sound-out-of-tune/">why old records sound out of tune</a>.</p>
+<p>The analyser measures the record's own tuning first (shown as the Hz of A4 and cents from 440) and reads the key against that, so a detuned record still gets the right key name. If you're working by ear, retune your keyboard or plugin by the cents it reports and the clashes go away.</p>
+
+<h2>What if the key changes partway through?</h2>
+<p>Some songs modulate. The classic move is shifting everything up a semitone or a tone for the last chorus. Any tool that gives one key per file, keyandbpm included, will report whichever key dominates or a compromise between them. If you suspect a change, trim the section you care about and check it on its own, or just use your ear on that part.</p>
+
+<h2>Which method should you use?</h2>
+<p>My honest take: use software for speed and your ear for the final call. If you're tagging a few hundred tracks for a DJ set, let the detector do it and spot-check anything with a low strength. If you're sampling or writing a part over a song, spend the five minutes with a keyboard, because you'll need to know where the notes are anyway. And if you're matching a loop rather than a full song, the process is a bit different; see <a href="/blog/what-key-is-this-sample-in/">what key is this sample in</a>.</p>
+`,
+  faq: [
+    {
+      q: "Can I find the key of a song without an instrument?",
+      a: "Yes. Use a free piano app to match the note you hum, or drop the file into a key detector. The humming and third test works on any instrument that can play single notes, including a phone keyboard.",
+    },
+    {
+      q: "Is the key of a song always its first chord?",
+      a: "No. Plenty of songs open on another chord, such as the IV or the vi. The last chord of the song or chorus is a better clue, and the note that feels like rest is the real test.",
+    },
+    {
+      q: "What's the difference between A minor and C major?",
+      a: "They use the same seven notes, but A minor treats A as home and C major treats C as home. That shared note set is why they're called relative keys and why detectors sometimes swap them.",
+    },
+    {
+      q: "Do I need perfect pitch to find a song's key?",
+      a: "No. Relative pitch is enough: you only need to hear whether a note you play matches the one you hum and whether it clashes with the track. Most producers who do this daily don't have perfect pitch.",
+    },
+    {
+      q: "Why does a website list a different key for the same song?",
+      a: "Usually it's the relative key, a key a fifth away, or a version of the song at a different speed or tuning. Check which of those relationships the two answers have before assuming either is wrong.",
+    },
+  ],
+  related: ["why-key-finders-disagree", "relative-major-and-minor-keys", "what-key-is-this-sample-in", "how-to-find-the-bpm-of-a-song"],
+} satisfies Post;

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BPM to milliseconds: delay and reverb time calculator</title>
+    <meta name="description" content="Turn a tempo into delay and reverb times in milliseconds for every note length, straight, dotted and triplet, plus the matching LFO rate in hertz." />
+    <link rel="canonical" href="https://keyandbpm.keyandbpm-web.workers.dev/bpm-to-ms/" />
+    <meta name="theme-color" content="#0e0e0f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://keyandbpm.keyandbpm-web.workers.dev/bpm-to-ms/" />
+    <meta property="og:title" content="BPM to milliseconds: delay and reverb time calculator" />
+    <meta property="og:description" content="Turn a tempo into delay and reverb times in milliseconds for every note length, straight, dotted and triplet, plus the matching LFO rate in hertz." />
+    <meta property="og:image" content="https://keyandbpm.keyandbpm-web.workers.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The KB-01 analyser showing A minor, 8A, 92.95 BPM and A4 = 438.5 Hz" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/blog/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/blog/blog.css" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"BPM to milliseconds: delay and reverb time calculator","description":"Turn a tempo into delay and reverb times in milliseconds for every note length, straight, dotted and triplet, plus the matching LFO rate in hertz.","url":"https://keyandbpm.keyandbpm-web.workers.dev/bpm-to-ms/"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert BPM to milliseconds?","acceptedAnswer":{"@type":"Answer","text":"Divide 60,000 by the BPM. That is one beat, a quarter note, in milliseconds. At 128 BPM it is 468.75 ms."}},{"@type":"Question","name":"What is a dotted eighth delay at 120 BPM?","acceptedAnswer":{"@type":"Answer","text":"375 ms. An eighth note at 120 BPM is 250 ms, and dotted means one and a half times as long."}},{"@type":"Question","name":"How do I work out a triplet delay time?","acceptedAnswer":{"@type":"Answer","text":"Take the straight note's time and multiply by two thirds. An eighth-note triplet at 120 BPM is 250 × 2 ÷ 3, about 166.7 ms."}}]}]}</script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="/">keyandbpm</a>
+      <nav class="masthead-nav">
+        <a href="/">analyser</a>
+        <a href="/blog/">guides</a>
+        <a href="https://github.com/mikeyfarina/keyandbpm">source</a>
+      </nav>
+    </header>
+    <main class="article">
+      <h1>BPM to milliseconds: delay and reverb time calculator</h1>
+      <p class="answer">Divide 60,000 by the BPM to get one quarter note in milliseconds. At 120 BPM a quarter note is 500 ms, an eighth is 250 ms, a dotted eighth is 375 ms, and an eighth-note triplet is 166.67 ms.</p>
+      <link rel="stylesheet" href="/tools.css" />
+      <section class="tool" aria-label="BPM to milliseconds">
+        <div class="tool-row">
+          <label for="bpm">Tempo</label>
+          <input id="bpm" type="number" inputmode="decimal" min="20" max="400" step="any" value="120" />
+          <label for="bpm">BPM</label>
+        </div>
+        <div class="table-wrap">
+        <table>
+        <thead><tr><th>Note</th><th>Straight ms</th><th>Dotted ms</th><th>Triplet ms</th><th>LFO Hz</th></tr></thead>
+        <tbody id="rows">
+      <tr><td>Whole note (1/1)</td><td>2000</td><td>3000</td><td>1333.33</td><td>0.50</td></tr>
+      <tr><td>Half note (1/2)</td><td>1000</td><td>1500</td><td>666.67</td><td>1.00</td></tr>
+      <tr><td>Quarter note (1/4)</td><td>500</td><td>750</td><td>333.33</td><td>2.00</td></tr>
+      <tr><td>Eighth note (1/8)</td><td>250</td><td>375</td><td>166.67</td><td>4.00</td></tr>
+      <tr><td>Sixteenth note (1/16)</td><td>125</td><td>187.5</td><td>83.33</td><td>8.00</td></tr>
+      <tr><td>Thirty-second note (1/32)</td><td>62.5</td><td>93.75</td><td>41.67</td><td>16.00</td></tr>
+        </tbody>
+        </table>
+        </div>
+        <p class="tool-note" id="caption" aria-live="polite">Times at 120 BPM.</p>
+      </section>
+      
+      <h2>The formula</h2>
+      <p>A quarter note lasts <code>60000 ÷ BPM</code> milliseconds. Halve it for an eighth, halve again for a sixteenth. A dotted note is one and a half times as long as the plain one, and a triplet is two thirds as long. The LFO column is the rate in hertz that completes one cycle per note: <code>1000 ÷ ms</code>.</p>
+      
+      <h2>Which delay time to use</h2>
+      <ul>
+      <li><strong>Dotted eighth</strong> is the classic rhythmic delay on guitars and vocals: the repeats fall between the beats and fill the gaps.</li>
+      <li><strong>Quarter or eighth</strong> sits on the grid and thickens a part without adding a new rhythm.</li>
+      <li><strong>Reverb pre-delay</strong> set to a sixteenth or thirty-second keeps the dry sound clear before the tail arrives.</li>
+      <li><strong>Reverb decay</strong> tuned to a half or whole note lets the tail die away before the next bar starts.</li>
+      </ul>
+      <p>Don't know the tempo? Drop the track into the <a href="/">key and BPM finder</a>, or use the <a href="/tap-tempo/">tap tempo</a> page. More on setting delays in <a href="/blog/bpm-to-ms-delay-times/">BPM to milliseconds for delay times</a>.</p>
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <h3>How do I convert BPM to milliseconds?</h3>
+        <p>Divide 60,000 by the BPM. That is one beat, a quarter note, in milliseconds. At 128 BPM it is 468.75 ms.</p>
+        <h3>What is a dotted eighth delay at 120 BPM?</h3>
+        <p>375 ms. An eighth note at 120 BPM is 250 ms, and dotted means one and a half times as long.</p>
+        <h3>How do I work out a triplet delay time?</h3>
+        <p>Take the straight note's time and multiply by two thirds. An eighth-note triplet at 120 BPM is 250 × 2 ÷ 3, about 166.7 ms.</p>
+      </section>
+    </main>
+    <script type="module">
+const NOTES = [{"name":"Whole note","short":"1/1","beats":4},{"name":"Half note","short":"1/2","beats":2},{"name":"Quarter note","short":"1/4","beats":1},{"name":"Eighth note","short":"1/8","beats":0.5},{"name":"Sixteenth note","short":"1/16","beats":0.25},{"name":"Thirty-second note","short":"1/32","beats":0.125}];
+const input = document.getElementById("bpm");
+const rows = document.getElementById("rows");
+const caption = document.getElementById("caption");
+const fmt = (n) => String(Number(n.toFixed(2)));
+
+function render() {
+  const bpm = Number(input.value);
+  if (!(bpm >= 20 && bpm <= 400)) {
+    caption.textContent = "Enter a tempo between 20 and 400 BPM.";
+    return;
+  }
+  rows.innerHTML = NOTES.map((n) => {
+    const straight = (60000 / bpm) * n.beats;
+    return "<tr><td>" + n.name + " (" + n.short + ")</td><td>" + fmt(straight) + "</td><td>" + fmt(straight * 1.5) + "</td><td>" + fmt((straight * 2) / 3) + "</td><td>" + (1000 / straight).toFixed(2) + "</td></tr>";
+  }).join("");
+  caption.textContent = "Times at " + bpm + " BPM.";
+}
+
+input.addEventListener("input", render);
+    </script>
+    <footer class="colophon">
+      <p>
+        Free and open source under the AGPL, by <a href="https://github.com/mikeyfarina">Mike Farina</a>.
+        Analysis by <a href="https://essentia.upf.edu/">Essentia</a>.
+      </p>
+    </footer>
+  </body>
+</html>
