@@ -3,3 +3,9 @@ dist/
 .wrangler/
 .DS_Store
 *.log
+
+# Local secrets and build-time keys. The PostHog token is a publishable client key,
+# but it still belongs in the environment rather than in the repository.
+.env
+.env.*
+!.env.example
