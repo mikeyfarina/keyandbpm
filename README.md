@@ -48,9 +48,9 @@ Deploying is one command once `wrangler` is logged in to Cloudflare:
 bun run --filter @keyandbpm/web deploy
 ```
 
-The site URL appears in `apps/web/index.html`, `apps/web/public/sitemap.xml` and
-`apps/web/public/robots.txt`. Change it in all three when moving to a custom domain, or
-search engines will index the wrong address.
+The site URL appears in `apps/web/index.html`, `apps/web/432-hz-checker/index.html` and
+`apps/web/public/robots.txt`. The guides, sitemap and `llms.txt` take it from
+`index.html`'s canonical tag when the build renders them.
 
 ## The terminal version
 

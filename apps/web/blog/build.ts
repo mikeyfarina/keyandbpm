@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 /*
-  Renders every guide in posts/ to public/blog/<slug>/index.html, writes the /blog/ index,
-  renders the standalone pages in ../pages/ at their own paths, and regenerates
-  public/sitemap.xml and public/llms.txt. Guides are plain HTML with no JavaScript, so
-  crawlers and answer engines read the whole article without running anything.
+  Renders every guide in posts/ to blog/<slug>/index.html, writes the /blog/ index, renders
+  the standalone pages in ../pages/ at their own paths, and writes sitemap.xml and llms.txt,
+  all into apps/web/generated/. Guides are plain HTML with no JavaScript, so crawlers and
+  answer engines read the whole article without running anything.
 
-  Run it after adding or editing a post or page: bun apps/web/blog/build.ts
+  The guides plugin in vite.config.ts runs this on every build and dev start, serves
+  generated/ in dev and copies it into dist/. Run it by hand to check posts without Vite.
 */
 import { Glob } from "bun";
 import { existsSync } from "node:fs";
@@ -17,9 +18,8 @@ import type { Post } from "./post.ts";
 const here = import.meta.dir;
 const web = dirname(here);
 const pub = join(web, "public");
-const out = join(pub, "blog");
-// Pages live outside public/blog, so the paths written last run are remembered to clear stale ones.
-const manifest = join(here, "generated-pages.json");
+const gen = join(web, "generated");
+const out = join(gen, "blog");
 
 // The canonical address lives in index.html; everything here follows it.
 const indexHtml = await readFile(join(web, "index.html"), "utf8");
@@ -45,7 +45,7 @@ posts.sort((a, b) => b.published.localeCompare(a.published) || a.title.localeCom
 const bySlug = new Map(posts.map((p) => [p.slug, p]));
 
 // Stale pages from renamed or deleted posts must not linger, so the folder is rebuilt whole.
-if (existsSync(out)) await rm(out, { recursive: true });
+if (existsSync(gen)) await rm(gen, { recursive: true });
 await mkdir(join(out, "fonts"), { recursive: true });
 for (const [pkg, file] of [
   ["@fontsource-variable/archivo", "archivo-latin-wdth-normal.woff2"],
@@ -62,20 +62,14 @@ for (const post of posts) {
 }
 await writeFile(join(out, "index.html"), renderIndex());
 
-const previous: string[] = existsSync(manifest) ? JSON.parse(await readFile(manifest, "utf8")) : [];
-for (const path of previous) {
-  const file = join(pub, path, "index.html");
-  if (existsSync(file)) await rm(file);
-}
 const rendered = pages.filter((p): p is RenderedPage => !("external" in p));
 for (const page of rendered) {
-  await mkdir(join(pub, page.path), { recursive: true });
-  await writeFile(join(pub, page.path, "index.html"), renderPage(page));
+  await mkdir(join(gen, page.path), { recursive: true });
+  await writeFile(join(gen, page.path, "index.html"), renderPage(page));
 }
-await writeFile(manifest, `${JSON.stringify(rendered.map((p) => p.path).sort(), null, 2)}\n`);
 
-await writeFile(join(pub, "sitemap.xml"), renderSitemap());
-await writeFile(join(pub, "llms.txt"), renderLlms());
+await writeFile(join(gen, "sitemap.xml"), renderSitemap());
+await writeFile(join(gen, "llms.txt"), renderLlms());
 console.log(`Wrote ${posts.length} guides and ${rendered.length} pages; listed ${pages.length - rendered.length} external pages`);
 
 function validate(all: Post[], allPages: Page[]): void {

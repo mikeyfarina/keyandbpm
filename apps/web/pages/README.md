@@ -1,1 +1,1 @@
-Standalone pages outside /blog/. Each `.ts` file here default-exports one `Page` or an array of them (see `../blog/page.ts`). `bun apps/web/blog/build.ts` renders them at their own paths and lists them in `sitemap.xml` and `llms.txt`.
+Standalone pages outside /blog/. Each `.ts` file here default-exports one `Page` or an array of them (see `../blog/page.ts`). The build (via `../blog/build.ts`) renders them at their own paths and lists them in `sitemap.xml` and `llms.txt`.

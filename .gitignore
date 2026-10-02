@@ -9,3 +9,6 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Rendered by apps/web/blog/build.ts on every build and dev start.
+apps/web/generated/
