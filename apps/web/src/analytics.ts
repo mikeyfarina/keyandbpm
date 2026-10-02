@@ -30,6 +30,15 @@ export interface Events {
   result_copied: { demo: boolean };
 }
 
+/**
+ * The PostHog project token. It is public by design: it only initialises the SDK and
+ * captures events, it reaches no private data, and this bundle already serves it to every
+ * visitor. Keeping it in source rather than an environment file means a fresh clone and CI
+ * both build with analytics intact, with nothing to wire up. The secret counterpart is the
+ * personal key beginning phx_, which must never appear here.
+ */
+const PROJECT_TOKEN = "phc_zJ7ZRe9e5XwTDgKcoE3oAJ53E2jpz9L2dxZGh4hKkGRn";
+
 let client: PostHog | null = null;
 let disabled = false;
 const queue: Array<(posthog: PostHog) => void> = [];
@@ -59,10 +68,11 @@ export function extensionOf(fileName: string): string {
  * then are queued and sent once PostHog is up.
  */
 export async function startAnalytics(): Promise<void> {
-  const key = import.meta.env.VITE_POSTHOG_KEY;
+  const key = import.meta.env.VITE_POSTHOG_KEY ?? PROJECT_TOKEN;
   if (!key) {
-    // Production builds refuse to run without a key (vite.config.ts), so this is dev only.
-    console.info("Analytics off: VITE_POSTHOG_KEY is not set.");
+    // Only reachable when VITE_POSTHOG_KEY is set to an empty string, which is how a fork
+    // turns analytics off, or points at its own project, without editing this file.
+    console.info("Analytics off: VITE_POSTHOG_KEY is empty.");
     disabled = true;
     queue.length = 0;
     return;
